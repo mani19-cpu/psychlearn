@@ -2,8 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>PsychLearn</title>
+<meta name="description" content="Learn psychology with interactive lessons, quizzes, and AI tutoring">
+<meta name="theme-color" content="#1a1625">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PsychLearn">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
 <style>
   :root {
     --purple: #9b7de0;
@@ -1096,6 +1104,7 @@ function sendSuggestion(el){document.getElementById('chat-input').value=el.textC
 
 // Init
 buildList();updateProgress();startQuiz();renderGlossary();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
 </script>
 </body>
 </html>
