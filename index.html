@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PsychLearn</title>
+<style>
+  :root {
+    --purple: #9b7de0;
+    --purple-light: #2e2540;
+    --purple-mid: #6b4fa8;
+    --blue: #6aa3e8;
+    --blue-light: #1e2a3d;
+    --yellow: #f5c842;
+    --yellow-light: #2e2a1a;
+    --green: #4ade80;
+    --green-light: #1a2e1a;
+    --red: #e05a5a;
+    --red-light: #2e1a1a;
+    --bg: #1a1625;
+    --card: #251f35;
+    --text: #ffffff;
+    --muted: #b0a8c8;
+    --border: #3d3458;
+    --radius: 16px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    background: var(--card);
+    border-bottom: 2px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo { font-size: 1.4rem; font-weight: 800; color: var(--purple); display: flex; align-items: center; gap: 8px; }
+  .logo span { font-size: 1.5rem; }
+  .progress-bar-wrap { flex: 1; max-width: 300px; margin: 0 24px; }
+  .progress-label { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+  .progress-bar { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--purple), #a87de0); border-radius: 99px; transition: width 0.5s ease; width: 0%; }
+
+  nav {
+    background: var(--card);
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    padding: 0 16px;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    padding: 12px 18px;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--purple); }
+  .tab-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
+
+  .app-body { flex: 1; max-width: 900px; width: 100%; margin: 0 auto; padding: 28px 20px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1.5px solid var(--border);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+
+  /* DUO PATH */
+  .duo-path { display: flex; flex-direction: column; align-items: center; padding: 10px 0 30px; }
+  .duo-unit { width: 100%; max-width: 480px; margin-bottom: 8px; }
+  .duo-unit-header {
+    background: linear-gradient(135deg, var(--purple), #5a3d9e);
+    border-radius: 16px;
+    padding: 16px 22px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 4px 0 #3a2070;
+  }
+  .duo-unit-header .unit-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+  .duo-unit-header .unit-name { font-size: 1.05rem; font-weight: 800; color: white; }
+
+  .duo-nodes { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .duo-nodes .duo-node:nth-child(odd) { margin-left: -80px; }
+  .duo-nodes .duo-node:nth-child(even) { margin-left: 80px; }
+  .duo-node { display: flex; flex-direction: column; align-items: center; margin-bottom: 0; position: relative; z-index: 2; cursor: pointer; }
+  .duo-node:not(:last-child)::after {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 28px;
+    background: var(--border);
+    border-radius: 99px;
+    margin: 4px auto;
+  }
+  .duo-node.done:not(:last-child)::after { background: var(--purple); }
+
+  .duo-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 800;
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.3);
+  }
+  .duo-btn:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba(0,0,0,0.3); }
+  .duo-btn.done {
+    background: linear-gradient(145deg, #a87de0, var(--purple));
+    box-shadow: 0 6px 0 #4a2a90;
+  }
+  .duo-btn.done:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #4a2a90; }
+  .duo-btn.next {
+    background: linear-gradient(145deg, #c4a0f0, #9b7de0);
+    box-shadow: 0 6px 0 #5a3890;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 6px 0 #5a3890, 0 0 0 0 rgba(155,125,224,0.4); }
+    50% { box-shadow: 0 6px 0 #5a3890, 0 0 0 10px rgba(155,125,224,0); }
+  }
+  .duo-checkmark {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 24px;
+    height: 24px;
+    background: #4ade80;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    border: 2px solid var(--bg);
+  }
+  .duo-node-label { margin-top: 8px; text-align: center; max-width: 110px; }
+  .duo-node-label .node-name { font-size: 0.78rem; font-weight: 700; line-height: 1.3; }
+  .duo-node-label .node-sub { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+
+  /* LESSON READER */
+  #lesson-reader { display: none; }
+  .back-btn {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-weight: 700;
+    color: var(--purple);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .lesson-header { margin-bottom: 20px; }
+  .lesson-header h1 { font-family: Georgia, 'Times New Roman', serif; font-size: 1.7rem; font-weight: 600; line-height: 1.3; margin-bottom: 6px; }
+  .lesson-header p { color: var(--muted); font-size: 0.88rem; }
+
+  .lesson-body { font-family: Georgia, 'Times New Roman', serif; font-size: 1rem; line-height: 1.8; }
+  .lesson-body h3 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--purple);
+    margin: 22px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .lesson-body p { margin-bottom: 14px; }
+
+  .analogy-box {
+    background: var(--yellow-light);
+    border-left: 4px solid var(--yellow);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin: 16px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.9rem;
+  }
+  .analogy-box strong { color: #e8c84a; display: block; margin-bottom: 4px; }
+
+  .example-box {
+    background: var(--green-light);
+    border-left: 4px solid var(--green);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin: 16px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.9rem;
+  }
+  .example-box strong { color: #4ade80; display: block; margin-bottom: 4px; }
+
+  .key-point {
+    background: var(--purple-light);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 16px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.9rem;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .key-point .kp-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+  .warning-box {
+    background: var(--red-light);
+    border-left: 4px solid var(--red);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin: 16px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.9rem;
+  }
+  .warning-box strong { color: var(--red); display: block; margin-bottom: 4px; }
+
+  .vocab-pill {
+    display: inline-block;
+    background: var(--blue-light);
+    color: var(--blue);
+    border-radius: 6px;
+    padding: 1px 7px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 700;
+    font-size: 0.88em;
+    border-bottom: 2px solid var(--blue);
+  }
+
+  .section-divider { border: none; border-top: 2px dashed var(--border); margin: 24px 0; }
+
+  .done-btn {
+    background: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 24px;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .done-btn:hover { background: #6347a8; transform: translateY(-1px); }
+
+  /* QUIZ */
+  .quiz-question { font-family: Georgia, 'Times New Roman', serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 18px; line-height: 1.5; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-option {
+    padding: 13px 18px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.93rem;
+    transition: all 0.18s;
+    text-align: left;
+    background: var(--card);
+    font-family: inherit;
+    color: var(--text);
+  }
+  .quiz-option:hover:not(:disabled) { border-color: var(--purple); background: var(--purple-light); }
+  .quiz-option.correct { border-color: #2d9e6b; background: #1a2e1a; color: #4ade80; }
+  .quiz-option.wrong { border-color: var(--red); background: #2e1a1a; color: var(--red); }
+  .quiz-option:disabled { cursor: default; }
+
+  .quiz-feedback { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 0.9rem; font-weight: 600; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: #1a2e1a; color: #4ade80; }
+  .quiz-feedback.wrong { background: #2e1a1a; color: var(--red); }
+
+  .next-q-btn {
+    margin-top: 14px;
+    padding: 10px 22px;
+    background: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: none;
+  }
+  .next-q-btn.show { display: inline-block; }
+  .next-q-btn:hover { background: #6347a8; }
+  .quiz-score-display { text-align: center; padding: 24px; }
+  .score-big { font-size: 3rem; font-weight: 800; color: var(--purple); }
+  .score-label { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+
+  /* CHAT */
+  .chat-wrap { display: flex; flex-direction: column; height: 520px; }
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--bg);
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+  }
+  .msg { max-width: 82%; padding: 12px 16px; border-radius: 16px; font-size: 0.93rem; line-height: 1.6; animation: fadeUp 0.25s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .msg.user { background: var(--purple); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .msg.bot { background: var(--card); border: 1.5px solid var(--border); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .msg.bot.thinking { color: var(--muted); font-style: italic; }
+  .chat-input-row { display: flex; gap: 10px; margin-top: 12px; }
+  .chat-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.93rem;
+    outline: none;
+    color: var(--text);
+    background: var(--card);
+  }
+  .chat-input:focus { border-color: var(--purple); }
+  .chat-send {
+    padding: 12px 20px;
+    background: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.93rem;
+  }
+  .chat-send:hover { background: #6347a8; }
+  .chat-send:disabled { background: var(--muted); cursor: not-allowed; }
+  .chat-suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .suggestion-chip {
+    padding: 6px 13px;
+    background: var(--purple-light);
+    color: var(--purple);
+    border: 1.5px solid var(--purple-mid);
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .suggestion-chip:hover { background: var(--purple); color: white; }
+
+  /* GLOSSARY */
+  .glossary-search {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.93rem;
+    margin-bottom: 16px;
+    outline: none;
+    color: var(--text);
+    background: var(--card);
+  }
+  .glossary-search:focus { border-color: var(--purple); }
+  .glossary-item { border-bottom: 1.5px solid var(--border); padding: 14px 4px; }
+  .glossary-item:last-child { border-bottom: none; }
+  .glossary-term { font-weight: 800; font-size: 0.95rem; color: var(--purple); }
+  .glossary-def { font-size: 0.88rem; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  @media (max-width: 600px) {
+    header { padding: 0 12px; height: 52px; }
+    .logo { font-size: 1.1rem; }
+    .progress-bar-wrap { margin: 0 12px; }
+    .tab-btn { padding: 10px 12px; font-size: 0.82rem; }
+    .app-body { padding: 16px 12px; }
+    .card { padding: 16px; }
+    .duo-nodes .duo-node:nth-child(odd) { margin-left: -50px; }
+    .duo-nodes .duo-node:nth-child(even) { margin-left: 50px; }
+    .duo-btn { width: 64px; height: 64px; font-size: 1.4rem; }
+    .duo-checkmark { width: 20px; height: 20px; font-size: 0.65rem; }
+    .lesson-header h1 { font-size: 1.3rem; }
+    .chat-wrap { height: 400px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span>🧠</span> PsychLearn</div>
+  <div class="progress-bar-wrap">
+    <div class="progress-label" id="progress-label">Course progress</div>
+    <div class="progress-bar"><div class="progress-fill" id="course-progress"></div></div>
+  </div>
+</header>
+
+<nav>
+  <button class="tab-btn active" onclick="showTab('lessons',this)">📖 Lessons</button>
+  <button class="tab-btn" onclick="showTab('quiz',this)">🧪 Quiz</button>
+  <button class="tab-btn" onclick="showTab('chat',this)">💬 Ask AI</button>
+  <button class="tab-btn" onclick="showTab('glossary',this)">📚 Glossary</button>
+</nav>
+
+<div class="app-body">
+  <div class="tab-panel active" id="tab-lessons">
+    <div id="lesson-list"></div>
+    <div id="lesson-reader">
+      <button class="back-btn" onclick="closeLesson()">← Back to lessons</button>
+      <div id="lesson-content"></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-quiz">
+    <div class="card">
+      <div class="card-title">🧪 Quick Quiz</div>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:18px;">34 questions across all 10 units. Randomised each time!</p>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-chat">
+    <div class="card">
+      <div class="card-title">💬 Ask the Psychology Tutor</div>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:14px;">Ask anything — plain language, real examples, and analogies.</p>
+      <div class="chat-suggestions">
+        <span class="suggestion-chip" onclick="sendSuggestion(this)">What is classical conditioning?</span>
+        <span class="suggestion-chip" onclick="sendSuggestion(this)">Explain Freud simply</span>
+        <span class="suggestion-chip" onclick="sendSuggestion(this)">How does memory work?</span>
+        <span class="suggestion-chip" onclick="sendSuggestion(this)">What causes anxiety?</span>
+        <span class="suggestion-chip" onclick="sendSuggestion(this)">Explain the bystander effect</span>
+      </div>
+      <div class="chat-wrap">
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg bot">👋 Hi! I'm your psychology tutor. Ask me anything about the mind, behaviour, or mental health!</div>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="chat-input" placeholder="Ask a psychology question..." onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="chat-send" id="chat-send-btn" onclick="sendChat()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-glossary">
+    <div class="card">
+      <div class="card-title">📚 Glossary</div>
+      <input class="glossary-search" id="glossary-search" placeholder="Search terms..." oninput="filterGlossary()">
+      <div id="glossary-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const units = [
+  { label:"Foundations of Psychology", unitNum:1, gradient:"linear-gradient(135deg,#9b7de0,#5a3d9e)", shadow:"#3a2070",
+    nodes:[{icon:"🧠",name:"What Is Psychology?",sub:"The science of mind"},{icon:"📜",name:"History of Psychology",sub:"From philosophy to science"},{icon:"🔬",name:"Modern Perspectives",sub:"Many lenses, one mind"},{icon:"📊",name:"Research Methods",sub:"How psychologists study"},{icon:"⚖️",name:"Ethics in Research",sub:"Protecting participants"},{icon:"🗂️",name:"Subfields",sub:"Branches of psychology"}]},
+  { label:"Biological Bases of Behavior", unitNum:2, gradient:"linear-gradient(135deg,#6aa3e8,#3d6da8)", shadow:"#2a4a7a",
+    nodes:[{icon:"⚡",name:"The Neuron",sub:"Building block of the brain"},{icon:"🔌",name:"Neural Communication",sub:"How signals travel"},{icon:"💊",name:"Key Neurotransmitters",sub:"Chemical messengers"},{icon:"🌐",name:"The Nervous System",sub:"CNS and PNS"},{icon:"🧠",name:"Brain Structure",sub:"Regions and functions"},{icon:"🔀",name:"Brain Lateralization",sub:"Left vs right"},{icon:"🧬",name:"Endocrine System",sub:"Hormones and glands"},{icon:"📸",name:"Brain Plasticity & Imaging",sub:"Rewiring and scanning"}]},
+  { label:"Sensation & Perception", unitNum:3, gradient:"linear-gradient(135deg,#e0a07d,#a85a3d)", shadow:"#7a3a20",
+    nodes:[{icon:"👁️",name:"Sensation vs Perception",sub:"Detect vs interpret"},{icon:"📏",name:"Thresholds & Sensitivity",sub:"Limits of detection"},{icon:"🌈",name:"Vision",sub:"How we see"},{icon:"🔊",name:"Hearing",sub:"How we hear"},{icon:"✋",name:"Other Senses",sub:"Touch, taste, smell"},{icon:"🧩",name:"Perceptual Organization",sub:"Gestalt principles"},{icon:"📐",name:"Depth Perception",sub:"Seeing in 3D"},{icon:"🎭",name:"Constancies & Illusions",sub:"When perception tricks us"},{icon:"🎯",name:"Attention",sub:"What we notice"}]},
+  { label:"Learning & Conditioning", unitNum:4, gradient:"linear-gradient(135deg,#e0d07d,#a8903d)", shadow:"#7a6a20",
+    nodes:[{icon:"📚",name:"What Is Learning?",sub:"Change through experience"},{icon:"🔔",name:"Classical Conditioning",sub:"Pavlov's dogs"},{icon:"🎰",name:"Operant Conditioning",sub:"Rewards and punishments"},{icon:"⚖️",name:"Comparing CC & OC",sub:"Key differences"},{icon:"👀",name:"Observational Learning",sub:"Learning by watching"},{icon:"💭",name:"Cognitive Influences",sub:"Thinking and learning"}]},
+  { label:"Memory & Cognition", unitNum:5, gradient:"linear-gradient(135deg,#7de0a0,#3d9e5a)", shadow:"#207040",
+    nodes:[{icon:"💾",name:"Nature of Memory",sub:"How memories work"},{icon:"📝",name:"Encoding",sub:"Getting info in"},{icon:"🗄️",name:"Storage",sub:"Keeping info"},{icon:"🔍",name:"Retrieval",sub:"Getting info out"},{icon:"🕳️",name:"Forgetting",sub:"Why we lose memories"},{icon:"🪞",name:"Memory Distortion",sub:"False memories"},{icon:"🧩",name:"Thinking & Problem-Solving",sub:"Heuristics and biases"}]},
+  { label:"Developmental Psychology", unitNum:6, gradient:"linear-gradient(135deg,#e07d9b,#9e3d5a)", shadow:"#702040",
+    nodes:[{icon:"🌱",name:"Intro to Development",sub:"Lifespan changes"},{icon:"🤰",name:"Prenatal Development",sub:"Before birth"},{icon:"👶",name:"Infancy & Childhood",sub:"Piaget's stages"},{icon:"❤️",name:"Social & Emotional",sub:"Attachment & parenting"},{icon:"🎓",name:"Adolescence",sub:"Identity formation"},{icon:"🧓",name:"Adulthood & Aging",sub:"Later stages"}]},
+  { label:"Personality", unitNum:7, gradient:"linear-gradient(135deg,#e07de0,#9e3d9e)", shadow:"#702070",
+    nodes:[{icon:"🎭",name:"What Is Personality?",sub:"Enduring patterns"},{icon:"🛋️",name:"Psychoanalytic Perspective",sub:"Freud's theory"},{icon:"🌻",name:"Humanistic Perspective",sub:"Maslow & Rogers"},{icon:"📊",name:"Trait Perspective",sub:"The Big Five"},{icon:"🔄",name:"Social-Cognitive",sub:"Bandura's approach"},{icon:"📋",name:"Personality Assessment",sub:"Measuring personality"}]},
+  { label:"Social Psychology", unitNum:8, gradient:"linear-gradient(135deg,#7de0e0,#3d9e9e)", shadow:"#207070",
+    nodes:[{icon:"👥",name:"What Is Social Psych?",sub:"People in context"},{icon:"💬",name:"Social Thinking",sub:"Attribution & attitudes"},{icon:"🫂",name:"Social Influence",sub:"Conformity & obedience"},{icon:"⛔",name:"Prejudice & Discrimination",sub:"Stereotypes & bias"},{icon:"😤",name:"Aggression",sub:"Causes of violence"},{icon:"💕",name:"Attraction & Relationships",sub:"What draws us together"},{icon:"🤝",name:"Prosocial Behavior",sub:"Helping others"}]},
+  { label:"Abnormal Psychology", unitNum:9, gradient:"linear-gradient(135deg,#e05a5a,#9e3d3d)", shadow:"#702020",
+    nodes:[{icon:"❓",name:"Defining Abnormal",sub:"What counts as a disorder"},{icon:"📖",name:"The DSM",sub:"Classification system"},{icon:"😰",name:"Anxiety Disorders",sub:"Excessive worry & fear"},{icon:"🔁",name:"OCD & Related",sub:"Obsessions & compulsions"},{icon:"😔",name:"Depressive Disorders",sub:"Persistent sadness"},{icon:"🎢",name:"Bipolar Disorder",sub:"Mood extremes"},{icon:"🌀",name:"Schizophrenia",sub:"Break from reality"},{icon:"🪞",name:"Dissociative Disorders",sub:"Disrupted identity"},{icon:"🧩",name:"Personality Disorders",sub:"Enduring patterns"}]},
+  { label:"Therapy & Treatment", unitNum:10, gradient:"linear-gradient(135deg,#a0e07d,#5a9e3d)", shadow:"#407020",
+    nodes:[{icon:"🏥",name:"Overview of Treatment",sub:"Who provides help"},{icon:"🛋️",name:"Psychodynamic Therapies",sub:"Unconscious conflicts"},{icon:"🌻",name:"Humanistic Therapies",sub:"Person-centred"},{icon:"🔧",name:"Behavioral Therapies",sub:"Learning-based"},{icon:"💭",name:"Cognitive Therapies",sub:"Changing thoughts"},{icon:"⚙️",name:"CBT",sub:"Gold standard"},{icon:"👨‍👩‍👧",name:"Group & Family",sub:"Systems approach"},{icon:"💊",name:"Biomedical Therapies",sub:"Medication & brain stim"},{icon:"📈",name:"Evaluating Therapies",sub:"Does therapy work?"},{icon:"🌟",name:"Prevention & Well-Being",sub:"Positive psychology"}]},
+];
+
+// Lesson content - Units 1-2 full, rest placeholder
+const L={};
+L["What Is Psychology?"]=`<div class="lesson-body">
+<h3>Defining Psychology</h3>
+<p><span class="vocab-pill">Psychology</span> is the scientific study of <strong>behaviour</strong> and <strong>mental processes</strong>. "Behaviour" refers to any observable action — from eye movements to speech to measurable brain activity — while "mental processes" include thoughts, feelings, perceptions, memories, motivations, and dreams that can only be inferred from behaviour.</p>
+
+<p>This definition contains two critical words. First, <em>scientific</em>: psychology is not common sense, folk wisdom, or armchair speculation. It is a rigorous <span class="vocab-pill">empirical science</span> that relies on systematic observation, precise measurement, controlled experimentation, and peer-reviewed replication. Second, <em>behaviour and mental processes</em>: the scope is vast, encompassing everything from the firing of a single neuron to the dynamics of entire cultures.</p>
+
+<div class="analogy-box">
+<strong>🔭 Think of it like this:</strong>
+If biology studies the body's hardware, psychology studies the software — the programs running on top. But unlike computer software, the "programs" of the mind are shaped by evolution, culture, personal history, and moment-to-moment experience. Psychology asks: how does this software work, why does it sometimes crash, and how can we optimise it?
+</div>
+
+<hr class="section-divider">
+
+<h3>Psychology's Four Goals</h3>
+<p>At the university level, psychologists organise their work around four fundamental goals:</p>
+<p>1. <strong>Describe</strong> — Systematically observe and document behaviour. What is happening? (e.g., recording how often a child displays aggressive behaviour in a classroom)</p>
+<p>2. <strong>Explain</strong> — Identify the causes and reasons for behaviour. Why is it happening? (e.g., linking aggression to frustration, modelling, or neurochemical imbalances)</p>
+<p>3. <strong>Predict</strong> — Forecast when and under what conditions a behaviour will occur. (e.g., predicting relapse risk in addiction based on environmental cues)</p>
+<p>4. <strong>Control/Change</strong> — Apply knowledge to modify behaviour in beneficial ways. (e.g., using cognitive-behavioural therapy to reduce anxiety)</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>Key distinction:</strong> Psychology differs from psychiatry. Psychologists typically hold a Ph.D. or Psy.D. and use psychological interventions. Psychiatrists hold an M.D. and can prescribe medication. Both work with mental health, but their training and tools differ.</span>
+</div>
+
+<hr class="section-divider">
+
+<h3>Levels of Analysis</h3>
+<p>Any psychological phenomenon can be examined at multiple <span class="vocab-pill">levels of analysis</span>:</p>
+<p>🧬 <strong>Biological</strong> — Genes, neurotransmitters, brain structures, hormones</p>
+<p>🧠 <strong>Psychological</strong> — Thoughts, emotions, learning history, personality traits</p>
+<p>🌍 <strong>Social-cultural</strong> — Relationships, cultural norms, socioeconomic status, media</p>
+
+<p>Consider depression: at the biological level, we examine serotonin deficits and genetic predisposition. At the psychological level, we study negative thought patterns and learned helplessness. At the social-cultural level, we consider poverty, isolation, and stigma. The <span class="vocab-pill">biopsychosocial model</span> integrates all three — and this is the dominant framework in modern psychology.</p>
+
+<div class="example-box">
+<strong>🔗 Real-life example:</strong>
+Why can't you stop checking your phone? <strong>Biological:</strong> dopamine spikes with each notification. <strong>Psychological:</strong> variable-ratio reinforcement (the same principle behind slot machines — unpredictable rewards are the most addictive). <strong>Social-cultural:</strong> social comparison and fear of missing out (FOMO). A complete explanation requires all three levels.
+</div>
+
+<hr class="section-divider">
+
+<h3>Psychology as a Science</h3>
+<p>What makes psychology scientific rather than philosophical? Three features:</p>
+<p><strong>Empiricism</strong> — Claims must be supported by observable, measurable evidence, not intuition or authority.</p>
+<p><strong>Objectivity</strong> — Researchers use standardised procedures, operational definitions (defining abstract concepts in measurable terms), and statistical analysis to minimise bias.</p>
+<p><strong>Falsifiability</strong> — A scientific hypothesis must be testable and potentially disprovable. Karl Popper argued that this is what separates science from pseudoscience. Freud's theories were criticised precisely because many of his claims could not be falsified.</p>
+
+<div class="warning-box">
+<strong>⚠️ Critical thinking alert:</strong>
+Be wary of <strong>pseudoscience</strong> in psychology: astrology, graphology (handwriting analysis for personality), and many "learning styles" claims lack empirical support. Always ask: What is the evidence? Was it peer-reviewed? Can it be replicated?
+</div>
+
+<hr class="section-divider">
+
+<h3>The Replication Crisis</h3>
+<p>In 2015, the <strong>Open Science Collaboration</strong> attempted to replicate 100 published psychology studies. Only about 36% produced the same results. This "<span class="vocab-pill">replication crisis</span>" shook the field and led to major reforms:</p>
+<p>• <strong>Pre-registration</strong> of hypotheses and methods before data collection</p>
+<p>• Larger sample sizes and greater <strong>statistical power</strong></p>
+<p>• Open data and open materials for transparency</p>
+<p>• Increased emphasis on <strong>effect sizes</strong> rather than just p-values</p>
+<p>• Registered replication reports in major journals</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span>The replication crisis is not a failure of psychology — it's a sign of a healthy, self-correcting science. The reforms it triggered have made psychological research more rigorous than ever.</span>
+</div>
+</div>`;
+
+L["History of Psychology"]=`<div class="lesson-body">
+<h3>Philosophical Roots</h3>
+<p>The questions psychology addresses — What is the mind? How do we learn? What motivates us? — have been debated for millennia. Understanding this history is essential because many "modern" debates in psychology are reincarnations of ancient philosophical disagreements.</p>
+
+<p><strong>Plato</strong> (427–347 BCE) argued for <span class="vocab-pill">nativism</span> — the idea that certain knowledge is innate, present from birth. He believed the soul (mind) was separate from the body and that true knowledge came from rational contemplation, not sensory experience.</p>
+
+<p><strong>Aristotle</strong> (384–322 BCE), Plato's student, took the opposite view: <span class="vocab-pill">empiricism</span> — all knowledge comes from sensory experience. He also proposed early associationist principles (contiguity, similarity, contrast) that would later influence learning theory.</p>
+
+<p><strong>René Descartes</strong> (1596–1650) proposed <span class="vocab-pill">mind-body dualism</span> — the mind (res cogitans) and body (res extensa) are fundamentally different substances that interact through the pineal gland. His famous <em>"Cogito, ergo sum"</em> ("I think, therefore I am") placed consciousness at the centre of philosophical inquiry.</p>
+
+<p><strong>John Locke</strong> (1632–1704) argued that the mind begins as a <span class="vocab-pill">tabula rasa</span> (blank slate), written upon entirely by experience. This empiricist tradition directly influenced behaviourism centuries later.</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span>The Plato–Aristotle divide maps onto the modern <strong>nature vs. nurture</strong> debate. The Descartes–Locke divide maps onto the <strong>mind–body problem</strong> — which neuroscience continues to wrestle with today.</span>
+</div>
+
+<hr class="section-divider">
+
+<h3>The Birth of Scientific Psychology</h3>
+<p>In <strong>1879</strong>, <span class="vocab-pill">Wilhelm Wundt</span> established the first formal psychology laboratory at the University of Leipzig, Germany. This date marks the official birth of psychology as a discipline separate from philosophy and physiology.</p>
+
+<p>Wundt used <span class="vocab-pill">introspection</span> — trained, systematic self-observation of one's own conscious experiences. Participants would report their sensations, feelings, and thoughts in response to controlled stimuli. His student <strong>Edward Titchener</strong> brought this approach to Cornell University and called it <span class="vocab-pill">structuralism</span> — the attempt to identify the basic structures (elements) of consciousness, much like a chemist identifies elements on the periodic table.</p>
+
+<p><strong>William James</strong> at Harvard rejected structuralism as too narrow. He championed <span class="vocab-pill">functionalism</span>, inspired by Darwin's theory of evolution: rather than asking <em>what</em> consciousness is made of, he asked <em>what it's for</em> — how do mental processes help organisms adapt to their environment? His landmark textbook <em>The Principles of Psychology</em> (1890) remains influential.</p>
+
+<div class="analogy-box">
+<strong>🔭 Analogy:</strong>
+Structuralism is like disassembling a clock to catalogue every gear and spring. Functionalism is like asking: what does this clock <em>do</em>? How does it help its owner navigate the day? Both are valid questions, but functionalism proved more productive for the field.
+</div>
+
+<hr class="section-divider">
+
+<h3>Major Schools of Thought</h3>
+
+<p>🔔 <strong>Behaviourism (1913–1960s)</strong></p>
+<p><strong>John B. Watson</strong> published his "behaviourist manifesto" in 1913, declaring that psychology should abandon the study of consciousness entirely and focus exclusively on <strong>observable behaviour</strong>. Watson believed that with the right conditioning, he could shape any infant into "any type of specialist" regardless of talents or ancestry — a radical environmentalist position.</p>
+<p><strong>B.F. Skinner</strong> extended behaviourism through his work on <span class="vocab-pill">operant conditioning</span>, demonstrating that behaviour is controlled by its consequences (reinforcement and punishment). Skinner rejected all mentalistic explanations — thoughts, feelings, and intentions were, for him, epiphenomena irrelevant to a science of behaviour. His work dominated American psychology for decades.</p>
+
+<p>🛋️ <strong>Psychoanalysis (1890s–present)</strong></p>
+<p><strong>Sigmund Freud</strong> (1856–1939) developed the psychoanalytic approach, arguably the most culturally influential psychological theory ever proposed. Freud argued that behaviour is driven by <span class="vocab-pill">unconscious</span> motives — desires, memories, and conflicts hidden from awareness. He proposed three personality structures (id, ego, superego), psychosexual stages of development, and defence mechanisms. While many of Freud's specific claims have not been supported empirically, his broader insight — that much mental life operates outside conscious awareness — has been validated by modern cognitive neuroscience.</p>
+
+<p>🌻 <strong>Humanistic Psychology (1950s–1970s)</strong></p>
+<p><strong>Abraham Maslow</strong> and <strong>Carl Rogers</strong> championed a "third force" in psychology, rejecting both the determinism of behaviourism (you are your reinforcement history) and psychoanalysis (you are your unconscious conflicts). They emphasised human agency, <span class="vocab-pill">free will</span>, subjective experience, and the innate drive toward <span class="vocab-pill">self-actualisation</span> — becoming the best version of oneself.</p>
+
+<p>💻 <strong>The Cognitive Revolution (1960s–present)</strong></p>
+<p>Beginning in the 1950s–60s, psychologists grew dissatisfied with behaviourism's refusal to study internal mental processes. The <span class="vocab-pill">cognitive revolution</span> was fuelled by advances in computer science (the computer as a metaphor for the mind), linguistics (Noam Chomsky's critique of Skinner's account of language), and neuroscience. Cognitive psychology studies how people <strong>perceive, attend, remember, think, decide, and solve problems</strong>. It remains the dominant paradigm today.</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>Exam tip:</strong> Each school didn't simply replace the last — they coexist. Modern psychology draws from all traditions. A clinical psychologist might use CBT (cognitive-behavioural), prescribe mindfulness (humanistic roots), and consider attachment patterns (psychodynamic origins) — all for the same patient.</span>
+</div>
+
+<hr class="section-divider">
+
+<h3>Important Figures Often Overlooked</h3>
+<p><strong>Mary Whiton Calkins</strong> (1863–1930) — Completed all requirements for a Harvard Ph.D. but was denied the degree because she was a woman. First female president of the APA. Developed the paired-associate technique still used in memory research.</p>
+<p><strong>Margaret Floy Washburn</strong> (1871–1939) — First woman to earn a Ph.D. in psychology (Cornell, 1894). Wrote <em>The Animal Mind</em>, a foundational text in comparative psychology.</p>
+<p><strong>Francis Cecil Sumner</strong> (1895–1954) — First African American to earn a Ph.D. in psychology (Clark University, 1920). Known as the "Father of Black Psychology."</p>
+<p><strong>Kenneth and Mamie Clark</strong> — Their "doll studies" on racial identity were cited in the U.S. Supreme Court's <em>Brown v. Board of Education</em> (1954) decision to desegregate schools.</p>
+
+<div class="example-box">
+<strong>🔗 Why this matters:</strong>
+Psychology's history includes significant exclusion based on gender, race, and culture. Recognising these contributions and biases is essential for understanding both the field's achievements and its limitations. The push for diversity in psychological research is not just ethical — it produces better science.
+</div>
+</div>`;
+
+L["Modern Perspectives"]=`<div class="lesson-body">
+<h3>Seven Major Perspectives</h3>
+<p>Contemporary psychology does not rely on a single theoretical framework. Instead, researchers and clinicians draw from multiple <span class="vocab-pill">perspectives</span> — each offering a distinct level of analysis and set of assumptions about what drives behaviour. Understanding these perspectives is essential because they shape what questions are asked, what methods are used, and what counts as an explanation.</p>
+
+<p>🧬 <strong>Biological (Neuroscience) Perspective</strong></p>
+<p>Examines how the brain, neurotransmitters, hormones, genetics, and evolutionary processes influence behaviour. This perspective uses tools like fMRI, EEG, genetic sequencing, and pharmacological manipulation. It has been especially productive in understanding mental disorders — for example, the role of serotonin in depression, dopamine in schizophrenia, and amygdala hyperactivity in anxiety disorders.</p>
+
+<p>🦎 <strong>Evolutionary Perspective</strong></p>
+<p>Applies <span class="vocab-pill">natural selection</span> principles to psychological traits. It asks: how might this behaviour or cognitive tendency have helped our ancestors survive and reproduce? For example, why humans have a strong fear of snakes (they were a genuine threat), why we prefer sweet and fatty foods (energy-dense in ancestral environments), and why jealousy exists (mate-guarding). Critics note that evolutionary explanations can be <strong>unfalsifiable "just-so stories"</strong> if not carefully tested.</p>
+
+<p>🛋️ <strong>Psychodynamic Perspective</strong></p>
+<p>A modern revision of Freud's psychoanalysis that retains the core insight: much of mental life is <strong>unconscious</strong>, early experiences shape personality, and internal conflicts influence behaviour. Modern psychodynamic research focuses on attachment patterns, implicit processes, and the therapeutic relationship rather than Freud's specific constructs (id, ego, superego).</p>
+
+<p>🔔 <strong>Behavioural Perspective</strong></p>
+<p>Studies how <span class="vocab-pill">classical conditioning</span>, <span class="vocab-pill">operant conditioning</span>, and environmental contingencies shape behaviour. Modern behaviourism (applied behaviour analysis) is highly effective in treating autism, phobias, and addiction. It has moved beyond Skinner's radical rejection of mental processes.</p>
+
+<p>💭 <strong>Cognitive Perspective</strong></p>
+<p>Investigates internal mental processes: how people perceive, attend, encode, store, retrieve, think, reason, decide, and solve problems. Uses the <strong>information-processing model</strong> (mind as computer). Cognitive psychology has been especially influential in understanding memory distortion, decision-making biases, and language processing.</p>
+
+<p>🌻 <strong>Humanistic Perspective</strong></p>
+<p>Emphasises subjective experience, personal growth, free will, and the drive toward <span class="vocab-pill">self-actualisation</span>. Focuses on the whole person rather than isolated behaviours or symptoms. Has strongly influenced counselling, positive psychology, and person-centred approaches to therapy.</p>
+
+<p>🌍 <strong>Sociocultural Perspective</strong></p>
+<p>Examines how behaviour and thinking vary across <strong>cultures, social contexts, and group identities</strong>. This perspective highlights that much of what we consider "universal" in psychology is actually derived from studies of WEIRD populations — <span class="vocab-pill">Western, Educated, Industrialised, Rich, and Democratic</span> — which represent only about 12% of the world's population. Cross-cultural research reveals significant variation in areas like conformity, emotional expression, self-concept, and moral reasoning.</p>
+
+<div class="analogy-box">
+<strong>🔭 Analogy:</strong>
+Imagine you're trying to understand why someone failed an exam. The biological perspective asks about their sleep and brain chemistry. The cognitive perspective examines their study strategies. The behavioural perspective looks at their reinforcement history. The psychodynamic perspective explores test anxiety rooted in childhood pressure. The sociocultural perspective considers cultural attitudes toward academic failure. Each reveals something true — and no single perspective captures the full picture.
+</div>
+
+<hr class="section-divider">
+
+<h3>The Biopsychosocial Model</h3>
+<p>The <span class="vocab-pill">biopsychosocial model</span> integrates biological, psychological, and social factors into a unified framework. It is the dominant model in clinical psychology, health psychology, and psychiatry. Rather than debating which factor matters most, it recognises that they interact dynamically.</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>University-level insight:</strong> When writing essays, you'll score highest by demonstrating multi-perspective thinking. Don't just describe one perspective — compare them, evaluate their strengths and limitations, and explain how they complement each other. This is called <strong>eclecticism</strong> or <strong>integration</strong>.</span>
+</div>
+</div>`;
+
+L["Research Methods"]=`<div class="lesson-body">
+<h3>The Scientific Method in Psychology</h3>
+<p>Psychological research follows the <span class="vocab-pill">scientific method</span> — a systematic cycle of observation, hypothesis formation, testing, and revision:</p>
+<p>1. <strong>Observe</strong> a phenomenon and identify a question</p>
+<p>2. <strong>Review existing literature</strong> to see what's already known</p>
+<p>3. <strong>Formulate a hypothesis</strong> — a specific, testable prediction about the relationship between variables</p>
+<p>4. <strong>Design and conduct a study</strong> to test the hypothesis</p>
+<p>5. <strong>Analyse data</strong> using statistical methods</p>
+<p>6. <strong>Draw conclusions</strong>, report findings, and submit for peer review</p>
+<p>7. <strong>Replicate</strong> — other researchers repeat the study to verify findings</p>
+
+<p>A <span class="vocab-pill">theory</span> in science is not a guess — it is a well-substantiated explanation of some aspect of the natural world that has been repeatedly tested and confirmed. Good theories generate testable hypotheses, are parsimonious (simple), and can be falsified.</p>
+
+<hr class="section-divider">
+
+<h3>Research Designs</h3>
+
+<p>🧪 <strong>Experiments</strong> — The gold standard for establishing <strong>causation</strong>. The researcher manipulates an <span class="vocab-pill">independent variable</span> (IV) and measures its effect on a <span class="vocab-pill">dependent variable</span> (DV), while holding <span class="vocab-pill">confounding variables</span> constant.</p>
+<p><strong>Random assignment</strong> to experimental and control groups ensures that any pre-existing differences between participants are distributed evenly, so the only systematic difference between groups is the IV.</p>
+<p><strong>Control conditions</strong> provide a baseline. A <strong>placebo control</strong> accounts for participant expectations. <strong>Double-blind</strong> procedures (neither participant nor experimenter knows group assignment) prevent demand characteristics and experimenter bias.</p>
+
+<div class="example-box">
+<strong>🔗 Example:</strong>
+Testing whether caffeine improves memory: IV = caffeine (200mg vs. placebo). DV = number of words recalled. Random assignment ensures groups are equivalent. Double-blind ensures neither the participant nor the tester knows who got caffeine. If the caffeine group recalls significantly more words, we can infer causation.
+</div>
+
+<p>📈 <strong>Correlational Studies</strong></p>
+<p>Measure the <strong>relationship between two variables</strong> without manipulation. A <span class="vocab-pill">correlation coefficient</span> (r) ranges from -1.0 to +1.0:</p>
+<p>• <strong>Positive correlation</strong> (+): as one variable increases, so does the other (e.g., study time and grades)</p>
+<p>• <strong>Negative correlation</strong> (-): as one increases, the other decreases (e.g., stress and immune function)</p>
+<p>• <strong>Zero correlation</strong> (0): no systematic relationship</p>
+<p>The <strong>absolute value</strong> indicates strength: r = 0.80 is stronger than r = 0.30, regardless of sign.</p>
+
+<div class="warning-box">
+<strong>⚠️ The cardinal rule of correlation:</strong>
+<strong>Correlation does not imply causation.</strong> Three possibilities always exist: (1) A causes B, (2) B causes A, or (3) a <strong>third variable</strong> (C) causes both. Example: ice cream sales and drowning deaths are positively correlated — but ice cream doesn't cause drowning. Hot weather (third variable) drives both.
+</div>
+
+<p>📋 <strong>Surveys</strong> — Self-report data from large samples. Strengths: efficient, large N. Weaknesses: response bias, social desirability, wording effects. A question asking "Do you support gun control?" vs. "Do you support protecting citizens' rights?" may yield very different results — this is called a <strong>framing effect</strong>.</p>
+
+<p>🔎 <strong>Case Studies</strong> — In-depth analysis of a single individual or small group (e.g., patient H.M., Phineas Gage). Provide rich, detailed data but have very limited <span class="vocab-pill">generalisability</span>.</p>
+
+<p>🌿 <strong>Naturalistic Observation</strong> — Observing behaviour in natural settings without intervention. High <span class="vocab-pill">ecological validity</span> but no control over variables and risk of observer bias.</p>
+
+<p>📅 <strong>Longitudinal vs. Cross-Sectional Designs</strong></p>
+<p><strong>Longitudinal</strong>: follow the same group over time (months, years, decades). Reveals developmental change but is expensive and suffers from attrition (dropouts). <strong>Cross-sectional</strong>: compare different age groups at a single point in time. Faster but confounds age effects with <span class="vocab-pill">cohort effects</span> (generational differences).</p>
+
+<hr class="section-divider">
+
+<h3>Statistical Reasoning</h3>
+<p><strong>Descriptive statistics</strong> summarise data:</p>
+<p>• <strong>Measures of central tendency</strong>: mean (average), median (middle value), mode (most frequent)</p>
+<p>• <strong>Measures of variability</strong>: range, <span class="vocab-pill">standard deviation</span> (average distance from the mean)</p>
+<p>• The mean is sensitive to <strong>outliers</strong> (extreme scores) — when data are skewed, the median is more representative.</p>
+
+<p><strong>Inferential statistics</strong> determine whether findings are likely due to chance:</p>
+<p>• <strong>Statistical significance</strong>: conventionally, p < .05 (less than 5% probability the result occurred by chance)</p>
+<p>• <strong>Effect size</strong>: measures the <em>magnitude</em> of a finding (e.g., Cohen's d). A result can be statistically significant but practically trivial if the effect size is tiny.</p>
+<p>• <strong>Confidence intervals</strong>: a range within which the true population value likely falls</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>University-level nuance:</strong> The p-value does NOT tell you the probability that your hypothesis is true. It tells you the probability of observing your data (or more extreme data) <em>if the null hypothesis were true</em>. This is a common misconception — even among researchers. The move toward reporting effect sizes and confidence intervals reflects growing recognition of p-value limitations.</span>
+</div>
+
+<hr class="section-divider">
+
+<h3>Sampling and Validity</h3>
+<p><span class="vocab-pill">Random sampling</span> (every member of the population has an equal chance of being selected) supports <strong>external validity</strong> — the ability to generalise findings to the broader population.</p>
+<p><strong>Internal validity</strong> — the degree to which a study establishes a true cause-and-effect relationship — depends on controlling confounds, using proper controls, and random assignment.</p>
+<p><strong>Operational definitions</strong> specify how abstract concepts are measured (e.g., "anxiety" defined as a score on the Beck Anxiety Inventory). This allows replication and precise communication.</p>
+</div>`;
+
+L["Ethics in Research"]=`<div class="lesson-body">
+<h3>Why Ethics Matter</h3>
+<p>The history of psychology includes studies that would be considered deeply unethical today. Understanding research ethics is not just about following rules — it's about recognising the power researchers have over participants and the responsibility that comes with it.</p>
+
+<hr class="section-divider">
+
+<h3>Core Ethical Principles</h3>
+<p>The <strong>APA (American Psychological Association)</strong> and the <strong>BPS (British Psychological Society)</strong> publish ethical codes that govern all research and clinical practice:</p>
+
+<p>✅ <strong>Informed consent</strong> — Participants must be clearly told about the study's purpose, procedures, potential risks and benefits, and their absolute right to <strong>withdraw at any time</strong> without penalty. Consent must be voluntary — no coercion, and special protections for vulnerable populations (children, prisoners, patients).</p>
+
+<p>🎭 <strong>Deception</strong> — Deceiving participants is permitted <em>only</em> when: (1) the study cannot be conducted otherwise, (2) the scientific value justifies it, and (3) participants are <span class="vocab-pill">debriefed</span> — fully informed about the true nature of the study and given the opportunity to withdraw their data. Deception should never cause distress beyond what participants would experience in ordinary life.</p>
+
+<p>🔒 <strong>Confidentiality</strong> — All personal data must be protected. Results should be reported anonymously. Data storage must comply with legal requirements (e.g., GDPR in Europe).</p>
+
+<p>🛡️ <strong>Protection from harm</strong> — Researchers must minimise physical and psychological risk. If unexpected harm occurs, the study must be stopped. Participants should leave in the same state they arrived.</p>
+
+<p>🐾 <strong>Animal research</strong> — Must follow strict guidelines: minimise suffering, use the fewest animals possible, and ensure procedures are approved by an <span class="vocab-pill">Institutional Animal Care and Use Committee (IACUC)</span>. Animals may be used only when there is no viable alternative and the potential knowledge justifies the procedures.</p>
+
+<hr class="section-divider">
+
+<h3>Historical Cases That Changed Ethics</h3>
+
+<div class="example-box">
+<strong>🔗 Milgram's Obedience Study (1963):</strong>
+Participants believed they were delivering dangerous electric shocks to another person. Many showed extreme distress — sweating, trembling, nervous laughter. While the study revealed profound insights about obedience to authority, participants were deceived and subjected to significant psychological stress. This study was a major catalyst for stricter ethical guidelines.
+</div>
+
+<div class="example-box">
+<strong>🔗 Zimbardo's Stanford Prison Experiment (1971):</strong>
+Students assigned to "guard" and "prisoner" roles in a simulated prison quickly descended into abusive dynamics. The study was terminated after just 6 days (of a planned 14). Guards became cruel; prisoners suffered emotional breakdowns. Criticised for lack of informed consent (participants didn't know what they were truly consenting to), failure to protect from harm, and Zimbardo's dual role as researcher and "prison superintendent." Recent reanalyses have questioned the study's validity entirely.
+</div>
+
+<div class="example-box">
+<strong>🔗 Watson's Little Albert Experiment (1920):</strong>
+Watson conditioned a 9-month-old infant to fear a white rat by pairing it with loud, frightening noises. The fear generalised to other furry objects. Albert was never deconditioned. This study would be prohibited today — it caused distress to a child who could not consent.
+</div>
+
+<hr class="section-divider">
+
+<h3>Institutional Review Boards (IRBs)</h3>
+<p>Today, <strong>all</strong> research involving human participants must be approved by an <span class="vocab-pill">Institutional Review Board (IRB)</span> or ethics committee <em>before</em> data collection begins. The IRB evaluates:</p>
+<p>• The risk-to-benefit ratio</p>
+<p>• The adequacy of informed consent procedures</p>
+<p>• Plans for maintaining confidentiality</p>
+<p>• Special protections for vulnerable populations</p>
+<p>• Whether deception is justified and debriefing is adequate</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>University context:</strong> If you conduct research for a thesis or dissertation, you will need IRB approval. Even survey-based studies with minimal risk require ethical review. This process exists because well-intentioned researchers can still cause harm — ethics review is a safeguard, not a bureaucratic obstacle.</span>
+</div>
+</div>`;
+
+L["Subfields"]=`<div class="lesson-body">
+<h3>The Breadth of Psychology</h3>
+<p>Psychology is not a single discipline — it is a vast federation of subfields, each with its own theories, methods, journals, and career paths. Understanding the landscape helps you appreciate the field's scope and identify where your own interests might lie.</p>
+
+<hr class="section-divider">
+
+<h3>Research-Oriented Subfields</h3>
+<p>🧬 <strong>Biological psychology / Behavioural neuroscience</strong> — Studies the neural, genetic, and physiological bases of behaviour. Uses brain imaging, lesion studies, pharmacological manipulation, and animal models. Key questions: How do neurotransmitters affect mood? What brain regions underlie decision-making?</p>
+
+<p>💭 <strong>Cognitive psychology</strong> — Studies mental processes: perception, attention, memory, language, reasoning, and decision-making. Uses experiments, reaction-time tasks, eye-tracking, and computational modelling. Gave rise to <span class="vocab-pill">cognitive neuroscience</span> (combining cognitive tasks with brain imaging).</p>
+
+<p>🌱 <strong>Developmental psychology</strong> — Studies change across the entire lifespan, from prenatal development to old age. Key topics: cognitive development (Piaget, Vygotsky), attachment (Bowlby, Ainsworth), moral development (Kohlberg), and ageing.</p>
+
+<p>👥 <strong>Social psychology</strong> — Studies how people think about, influence, and relate to one another. Key topics: attitudes, conformity, obedience, prejudice, group behaviour, and interpersonal attraction.</p>
+
+<p>🧠 <strong>Personality psychology</strong> — Studies individual differences in characteristic patterns of thinking, feeling, and behaving. Major frameworks: Big Five traits, psychodynamic theory, social-cognitive theory.</p>
+
+<p>🦎 <strong>Evolutionary psychology</strong> — Applies evolutionary theory to explain psychological adaptations: mate selection, parental investment, fear responses, cooperation, and aggression.</p>
+
+<p>🌍 <strong>Cross-cultural psychology</strong> — Examines how cultural factors influence behaviour and mental processes. Tests whether psychological findings from Western populations generalise to other cultures.</p>
+
+<hr class="section-divider">
+
+<h3>Applied Subfields</h3>
+<p>🩺 <strong>Clinical psychology</strong> — Assessment, diagnosis, and treatment of mental disorders. Clinical psychologists use evidence-based therapies (CBT, psychodynamic, humanistic) and psychological testing. The largest subfield of psychology.</p>
+
+<p>💬 <strong>Counselling psychology</strong> — Helps people with everyday problems, life transitions, and personal growth. Overlaps with clinical but typically focuses on less severe difficulties and strengths-based approaches.</p>
+
+<p>🏢 <strong>Industrial-organisational (I/O) psychology</strong> — Applies psychology to the workplace: employee selection, training, motivation, leadership, team dynamics, and organisational culture. One of the fastest-growing and highest-paying subfields.</p>
+
+<p>🎓 <strong>Educational psychology</strong> — Studies how people learn and how to improve teaching. Topics include motivation, classroom management, learning disabilities, and assessment design.</p>
+
+<p>⚖️ <strong>Forensic psychology</strong> — Applies psychology to the legal system: criminal profiling, competency evaluations, eyewitness testimony research, risk assessment, and jury selection.</p>
+
+<p>🏥 <strong>Health psychology</strong> — Studies how psychological, behavioural, and cultural factors contribute to physical health and illness. Topics: stress and immune function, health behaviour change, chronic illness management, and the placebo effect.</p>
+
+<p>🧠 <strong>Neuropsychology</strong> — Assesses and treats cognitive and behavioural consequences of brain damage or disease. Uses standardised test batteries to evaluate memory, attention, language, and executive function after stroke, traumatic brain injury, or neurodegeneration.</p>
+
+<p>📱 <strong>Emerging fields:</strong> Cyberpsychology (technology and behaviour), positive psychology (human flourishing), environmental psychology (how spaces affect behaviour), and computational psychiatry (mathematical models of mental disorder).</p>
+
+<div class="analogy-box">
+<strong>🔭 Analogy:</strong>
+Psychology is like medicine — one broad discipline with dozens of specialties. Just as you wouldn't ask a dermatologist to perform heart surgery, you wouldn't ask a social psychologist to diagnose a learning disability. Each subfield has deep expertise in its domain, and the most interesting work often happens at the intersections.
+</div>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>Career note:</strong> A bachelor's degree in psychology opens doors to many fields (HR, marketing, social work, data analysis), but practising as a psychologist typically requires a doctoral degree (Ph.D. for research-focused, Psy.D. for practice-focused). Counselling and social work roles may require a master's degree.</span>
+</div>
+</div>`;
+L["The Neuron"]=`<div class="lesson-body"><h3>The Brain's Building Block</h3><p>The <span class="vocab-pill">neuron</span> is the fundamental unit of the nervous system. <strong>86 billion neurons</strong> in the human brain, each with thousands of connections.</p><p>🌳 <strong>Dendrites</strong> — Receive signals</p><p>📡 <strong>Cell body (soma)</strong> — Integrates information</p><p>⚡ <strong>Axon</strong> — Transmits signals onward</p><div class="analogy-box"><strong>🔭 Analogy:</strong>A neuron is like a relay runner. Dendrites receive the baton, the soma decides whether to run, and the axon sprints to pass it on.</div><p>The <span class="vocab-pill">myelin sheath</span> insulates axons and speeds signals. Gaps called <strong>nodes of Ranvier</strong> enable saltatory conduction. Myelin degeneration causes <strong>multiple sclerosis</strong>.</p></div>`;
+L["Neural Communication"]=`<div class="lesson-body"><h3>The Action Potential</h3><p><span class="vocab-pill">Action potentials</span> are brief electrical charges down the axon. Resting potential: -70mV. When stimulated past threshold, sodium rushes in (<span class="vocab-pill">depolarization</span>). <strong>All-or-none principle</strong>: fires fully or not at all. Brief <strong>refractory period</strong> after.</p><hr class="section-divider"><h3>Synaptic Transmission</h3><p><span class="vocab-pill">Neurotransmitters</span> are released from vesicles, cross the <span class="vocab-pill">synaptic cleft</span>, bind to receptors. Effect is <strong>excitatory</strong> or <strong>inhibitory</strong>. Cleared by <span class="vocab-pill">reuptake</span>, enzymes, or diffusion.</p><div class="analogy-box"><strong>🔭 Analogy:</strong>A neuron at a dock throws packages (neurotransmitters) across a river (synaptic cleft). Packages fit specific mailboxes (receptors). Leftovers are pulled back (reuptake).</div></div>`;
+L["Key Neurotransmitters"]=`<div class="lesson-body"><h3>Chemical Messengers</h3><p>😊 <strong>Dopamine</strong> — Reward, motivation. Excess → schizophrenia; deficit → Parkinson's</p><p>😌 <strong>Serotonin</strong> — Mood, sleep. Low → depression. SSRIs increase it.</p><p>😬 <strong>Norepinephrine</strong> — Arousal, fight-or-flight</p><p>🛑 <strong>GABA</strong> — Main inhibitory signal. Low → anxiety</p><p>⚡ <strong>Glutamate</strong> — Main excitatory signal. Important for memory.</p><p>🧠 <strong>Acetylcholine</strong> — Muscle action, memory. Deficit → Alzheimer's</p><p>😊 <strong>Endorphins</strong> — Natural painkillers</p><hr class="section-divider"><p><span class="vocab-pill">Agonists</span> mimic neurotransmitters; <span class="vocab-pill">antagonists</span> block them.</p><div class="example-box"><strong>🔗 Example:</strong>Caffeine blocks adenosine receptors (which make you sleepy), acting as an antagonist. That's why coffee keeps you awake.</div></div>`;
+L["The Nervous System"]=`<div class="lesson-body"><h3>Two Main Divisions</h3><p>🧠 <strong>Central nervous system (CNS)</strong> — Brain + spinal cord</p><p>🌐 <strong>Peripheral nervous system (PNS)</strong>:</p><p>&nbsp;&nbsp;→ <strong>Somatic</strong> — Voluntary muscles</p><p>&nbsp;&nbsp;→ <strong>Autonomic</strong> — Involuntary functions:</p><p>&nbsp;&nbsp;&nbsp;&nbsp;⚡ <strong>Sympathetic</strong> — Fight-or-flight</p><p>&nbsp;&nbsp;&nbsp;&nbsp;😌 <strong>Parasympathetic</strong> — Rest-and-digest</p><div class="analogy-box"><strong>🔭 Analogy:</strong>Your nervous system is the internet. Brain = server farm, spinal cord = main cable, nerves = connections to every device. Sympathetic = emergency alert; parasympathetic = all clear.</div></div>`;
+L["Brain Structure"]=`<div class="lesson-body"><h3>Brainstem & Cerebellum</h3><p>❤️ <strong>Medulla</strong> — Heartbeat, breathing</p><p>💤 <strong>Pons</strong> — Movement coordination, sleep</p><p>⚡ <strong>Reticular formation</strong> — Arousal/alertness</p><p><strong>Cerebellum</strong> — Balance, coordination, motor learning</p><hr class="section-divider"><h3>Limbic System</h3><p>😨 <span class="vocab-pill">Amygdala</span> — Fear and aggression</p><p>🗂️ <span class="vocab-pill">Hippocampus</span> — New memory formation (patient H.M.)</p><p>🌡️ <strong>Hypothalamus</strong> — Temperature, hunger, thirst, endocrine link</p><p>📡 <strong>Thalamus</strong> — Sensory relay (except smell)</p><hr class="section-divider"><h3>Cerebral Cortex</h3><p>🎯 <strong>Frontal</strong> — Motor cortex, <span class="vocab-pill">Broca's area</span>, prefrontal (Phineas Gage)</p><p>✋ <strong>Parietal</strong> — Somatosensory cortex</p><p>👂 <strong>Temporal</strong> — Auditory, <span class="vocab-pill">Wernicke's area</span></p><p>👁️ <strong>Occipital</strong> — Visual cortex</p><div class="analogy-box"><strong>🏢 Analogy:</strong>The brain is a company. Cortex = executive floor, amygdala = security, hippocampus = filing room, cerebellum = facilities.</div></div>`;
+L["Brain Lateralization"]=`<div class="lesson-body"><h3>Two Hemispheres</h3><p>Connected by the <span class="vocab-pill">corpus callosum</span>. Split-brain research (Sperry & Gazzaniga):</p><p>📝 <strong>Left</strong> — Language, logic, sequential processing</p><p>🎨 <strong>Right</strong> — Spatial, faces, emotion, holistic processing</p><div class="warning-box"><strong>⚠️ Myth alert:</strong>Being "left-brained" or "right-brained" is an oversimplification. Both hemispheres work together on virtually every task.</div></div>`;
+L["Endocrine System"]=`<div class="lesson-body"><h3>Slow Chemical System</h3><p>The <span class="vocab-pill">endocrine system</span> uses <strong>hormones</strong> via the bloodstream. Slower than nerves but longer-lasting.</p><p>👑 <strong>Pituitary</strong> — Master gland</p><p>⚡ <strong>Thyroid</strong> — Metabolism</p><p>😤 <strong>Adrenal</strong> — Adrenaline, cortisol</p><p>🧬 <strong>Gonads</strong> — Sex hormones</p></div>`;
+L["Brain Plasticity & Imaging"]=`<div class="lesson-body"><h3>The Brain Rewires Itself</h3><p><span class="vocab-pill">Neuroplasticity</span> — The brain forms new connections throughout life, especially after injury and during learning.</p><div class="key-point"><span class="kp-icon">💡</span><span>Neurons that fire together, wire together. Practice strengthens connections.</span></div><hr class="section-divider"><h3>Imaging Techniques</h3><p>📊 <strong>EEG</strong> — Electrical activity, great time resolution</p><p>📸 <strong>CT</strong> — X-ray structural images</p><p>🧲 <strong>MRI</strong> — Detailed structure via magnetic fields</p><p>🎯 <strong>fMRI</strong> — Activity via blood flow</p><p>☢️ <strong>PET</strong> — Metabolic activity via radioactive glucose</p></div>`;
+
+// Simple content generator for units 3-10
+function simpleContent(name,sub){return `<div class="lesson-body"><h3>${name}</h3><p>This lesson covers <strong>${name.toLowerCase()}</strong> — ${sub.toLowerCase()}.</p><div class="key-point"><span class="kp-icon">💡</span><span>Full detailed content coming soon. Use the Quiz and Glossary tabs to study this topic!</span></div></div>`;}
+
+// Quiz
+const quizData=[
+{q:"Who founded the first psychology laboratory?",options:["Freud","Wundt","James","Watson"],correct:1,explain:"Wundt founded it in Leipzig, 1879."},
+{q:"Which method establishes cause-and-effect?",options:["Correlational","Case study","Experiment","Observation"],correct:2,explain:"Experiments manipulate variables and control confounds."},
+{q:"A correlation of -0.85 indicates:",options:["Weak positive","Strong negative","No relationship","Strong positive"],correct:1,explain:"Sign=direction, absolute value=strength. 0.85 is strong."},
+{q:"Which neurotransmitter is linked to muscle movement and memory?",options:["Dopamine","Serotonin","Acetylcholine","GABA"],correct:2,explain:"ACh is involved in muscle contraction and memory. Deficit → Alzheimer's."},
+{q:"Fight-or-flight is activated by the:",options:["Parasympathetic","Somatic","Sympathetic","Central"],correct:2,explain:"The sympathetic division activates fight-or-flight."},
+{q:"Which structure forms new explicit memories?",options:["Amygdala","Hippocampus","Hypothalamus","Cerebellum"],correct:1,explain:"The hippocampus consolidates new declarative memories."},
+{q:"Damage to Broca's area causes:",options:["Can't understand speech","Can't produce speech","Blindness","Motor loss"],correct:1,explain:"Broca's area controls speech production."},
+{q:"Converting physical energy to neural signals is:",options:["Perception","Adaptation","Transduction","Accommodation"],correct:2,explain:"Transduction converts stimulus energy into neural impulses."},
+{q:"Grouping nearby elements is the Gestalt principle of:",options:["Similarity","Closure","Proximity","Continuity"],correct:2,explain:"Proximity: we group elements that are near each other."},
+{q:"The cocktail party effect demonstrates:",options:["Adaptation","Selective attention","Change blindness","Constancy"],correct:1,explain:"We can focus on one conversation amid noise."},
+{q:"Before conditioning, Pavlov's bell was a:",options:["Conditioned stimulus","Unconditioned stimulus","Neutral stimulus","Conditioned response"],correct:2,explain:"Before pairing, the bell was neutral."},
+{q:"Taking aspirin to relieve a headache is:",options:["Positive reinforcement","Negative reinforcement","Positive punishment","Negative punishment"],correct:1,explain:"Removing pain (aversive) increases aspirin-taking behaviour."},
+{q:"Slot machines use which schedule?",options:["Fixed-ratio","Variable-ratio","Fixed-interval","Variable-interval"],correct:1,explain:"Unpredictable number of responses → variable-ratio. Hardest to extinguish."},
+{q:"Bandura's Bobo doll experiment showed:",options:["Classical conditioning","Operant conditioning","Observational learning","Latent learning"],correct:2,explain:"Children imitated observed aggression."},
+{q:"Atkinson-Shiffrin: info flows from:",options:["LTM→STM→sensory","Sensory→LTM→STM","Sensory→STM→LTM","STM→sensory→LTM"],correct:2,explain:"Sensory → short-term → long-term memory."},
+{q:"Recalling first and last list items is the:",options:["Spacing effect","Serial position effect","Primacy effect","Testing effect"],correct:1,explain:"Includes both primacy (first) and recency (last)."},
+{q:"Loftus showed that:",options:["Memories are permanent","Leading questions alter memory","Repressed memories are accurate","Memory improves with age"],correct:1,explain:"Misleading info distorts eyewitness memory."},
+{q:"Judging probability by how easily examples come to mind:",options:["Representativeness","Anchoring","Availability heuristic","Framing"],correct:2,explain:"We overestimate vivid, memorable events."},
+{q:"Understanding water amount stays the same when poured:",options:["Object permanence","Conservation","Egocentrism","Formal operations"],correct:1,explain:"Conservation develops in concrete operational stage."},
+{q:"Secure attachment is characterised by:",options:["Avoiding caregiver","Exploring + seeking comfort","Clingy + resisting comfort","Confused behaviour"],correct:1,explain:"Securely attached children use caregiver as safe base."},
+{q:"Erikson's adolescent task:",options:["Trust vs mistrust","Identity vs role confusion","Intimacy vs isolation","Generativity vs stagnation"],correct:1,explain:"Teens form a coherent personal identity."},
+{q:"Freud's reality principle structure:",options:["Id","Ego","Superego","Libido"],correct:1,explain:"The ego mediates between id desires and reality."},
+{q:"Big Five trait for emotional stability:",options:["Openness","Conscientiousness","Agreeableness","Neuroticism (low)"],correct:3,explain:"Low neuroticism = calm and resilient."},
+{q:"Self-actualization tops:",options:["Kohlberg's theory","Piaget's stages","Maslow's hierarchy","Erikson's stages"],correct:2,explain:"Maslow's highest need is fulfilling one's potential."},
+{q:"Overattributing others' behaviour to traits:",options:["Self-serving bias","Fundamental attribution error","Cognitive dissonance","Actor-observer bias"],correct:1,explain:"FAE = overestimating disposition, underestimating situation."},
+{q:"Milgram's max-shock percentage:",options:["10%","35%","65%","90%"],correct:2,explain:"About 65% continued to 450 volts."},
+{q:"Bystander effect is caused by:",options:["Apathy","Diffusion of responsibility","Aggression","Conformity"],correct:1,explain:"Each person assumes someone else will help."},
+{q:"Depression + mania alternating:",options:["MDD","GAD","Bipolar disorder","Schizophrenia"],correct:2,explain:"Bipolar = depressive and manic episodes."},
+{q:"Hearing voices without a source:",options:["Delusion","Hallucination","Compulsion","Obsession"],correct:1,explain:"Hallucinations are false sensory experiences."},
+{q:"Learned helplessness is linked to:",options:["Anxiety","Schizophrenia","Depression","OCD"],correct:2,explain:"Seligman's model: perceived lack of control → depression."},
+{q:"CBT focuses on changing:",options:["Unconscious conflicts","Maladaptive thoughts & behaviours","Family dynamics","Brain chemistry"],correct:1,explain:"CBT targets distorted thinking and problematic behaviours."},
+{q:"SSRIs treat depression by:",options:["Blocking dopamine","Increasing serotonin","Decreasing norepinephrine","Enhancing GABA"],correct:1,explain:"SSRIs block serotonin reuptake."},
+{q:"Therapy using unconditional positive regard:",options:["Psychoanalysis","Person-centred","CBT","Desensitization"],correct:1,explain:"Rogers' person-centred therapy."},
+{q:"Systematic desensitization treats:",options:["Depression","Schizophrenia","Phobias","Personality disorders"],correct:2,explain:"Relaxation + graduated exposure for phobias."},
+];
+
+// Glossary
+const glossaryData=[
+{term:"Psychology",def:"The scientific study of behavior and mental processes."},
+{term:"Structuralism",def:"Early school using introspection to analyze conscious experience."},
+{term:"Functionalism",def:"School focused on how mental processes help organisms adapt."},
+{term:"Behaviorism",def:"Perspective emphasizing observable behavior and conditioning."},
+{term:"Psychoanalysis",def:"Freud's theory of unconscious motives and childhood experiences."},
+{term:"Humanistic psychology",def:"Perspective emphasizing free will, growth, and self-actualization."},
+{term:"Cognitive psychology",def:"Study of perception, memory, thinking, and problem-solving."},
+{term:"Biopsychosocial model",def:"Integrated approach: biological + psychological + social factors."},
+{term:"Scientific method",def:"Systematic process: observation, hypothesis, experiment, conclusion."},
+{term:"Informed consent",def:"Participants told about study purpose, procedures, and risks."},
+{term:"Correlation",def:"Statistical relationship between two variables; does not imply causation."},
+{term:"Hypothesis",def:"A testable prediction about variable relationships."},
+{term:"Neuron",def:"Nerve cell transmitting electrical and chemical signals."},
+{term:"Action potential",def:"Brief electrical charge traveling down a neuron's axon."},
+{term:"Synapse",def:"Junction between neurons where neurotransmitters are released."},
+{term:"Neurotransmitter",def:"Chemical messengers crossing the synaptic gap between neurons."},
+{term:"Dopamine",def:"Neurotransmitter for movement, reward, motivation."},
+{term:"Serotonin",def:"Neurotransmitter regulating mood, sleep, appetite."},
+{term:"Amygdala",def:"Limbic structure processing emotions, especially fear."},
+{term:"Hippocampus",def:"Limbic structure critical for forming new explicit memories."},
+{term:"Cerebral cortex",def:"Outer brain layer for thinking, planning, language."},
+{term:"Broca's area",def:"Left frontal region controlling speech production."},
+{term:"Wernicke's area",def:"Left temporal region for language comprehension."},
+{term:"Neuroplasticity",def:"Brain's ability to reorganize and form new connections."},
+{term:"Endocrine system",def:"Slow chemical communication via hormones in bloodstream."},
+{term:"Sensation",def:"Detecting and transducing physical energy into neural signals."},
+{term:"Perception",def:"Brain organizing and interpreting sensory information."},
+{term:"Transduction",def:"Converting physical energy into neural impulses."},
+{term:"Absolute threshold",def:"Minimum intensity to detect a stimulus 50% of the time."},
+{term:"Gestalt principles",def:"Perceptual organization: proximity, similarity, closure, continuity."},
+{term:"Selective attention",def:"Focusing awareness on one stimulus while filtering others."},
+{term:"Classical conditioning",def:"Neutral stimulus becomes associated with a meaningful one."},
+{term:"Operant conditioning",def:"Behavior strengthened by reinforcement or weakened by punishment."},
+{term:"Positive reinforcement",def:"Adding a desirable stimulus to increase behavior."},
+{term:"Negative reinforcement",def:"Removing an aversive stimulus to increase behavior."},
+{term:"Shaping",def:"Reinforcing successive approximations toward desired behavior."},
+{term:"Observational learning",def:"Learning by watching and imitating others (Bandura)."},
+{term:"Encoding",def:"Converting information into storable memory form."},
+{term:"Retrieval",def:"Accessing stored information from memory."},
+{term:"Working memory",def:"Active processing of information in short-term storage."},
+{term:"Explicit memory",def:"Conscious recall of facts and experiences."},
+{term:"Implicit memory",def:"Unconscious memory for skills and conditioned responses."},
+{term:"Spacing effect",def:"Distributed practice beats cramming for retention."},
+{term:"Misinformation effect",def:"Misleading post-event info distorts memory (Loftus)."},
+{term:"Confirmation bias",def:"Seeking info that confirms existing beliefs."},
+{term:"Heuristic",def:"Mental shortcut: quick but error-prone."},
+{term:"Object permanence",def:"Objects exist even when hidden (sensorimotor stage)."},
+{term:"Conservation",def:"Quantity unchanged despite appearance changes."},
+{term:"Attachment",def:"Emotional bond shown by seeking closeness."},
+{term:"Secure attachment",def:"Child explores confidently, seeks comfort on reunion."},
+{term:"Erikson's stages",def:"Eight psychosocial stages with central conflicts."},
+{term:"Personality",def:"Enduring patterns of thinking, feeling, and behaving."},
+{term:"Id",def:"Freud: operates on pleasure principle, seeks gratification."},
+{term:"Ego",def:"Freud: operates on reality principle, mediates id and world."},
+{term:"Superego",def:"Freud: internalized moral standards."},
+{term:"Defense mechanisms",def:"Unconscious strategies to reduce anxiety."},
+{term:"Self-actualization",def:"Maslow's highest need: fulfilling one's potential."},
+{term:"Unconditional positive regard",def:"Rogers: total acceptance of another person."},
+{term:"Big Five (OCEAN)",def:"Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism."},
+{term:"Self-efficacy",def:"Belief in one's ability to succeed."},
+{term:"Fundamental attribution error",def:"Overestimating dispositional factors in others."},
+{term:"Conformity",def:"Adjusting behavior to match group standards (Asch)."},
+{term:"Obedience",def:"Complying with authority commands (Milgram)."},
+{term:"Groupthink",def:"Suppressing dissent for group harmony."},
+{term:"Cognitive dissonance",def:"Discomfort when actions conflict with attitudes."},
+{term:"Bystander effect",def:"Less likely to help when others are present."},
+{term:"Prejudice",def:"Unjustifiable negative attitude toward a group."},
+{term:"DSM-5-TR",def:"Standard classification system for psychological disorders."},
+{term:"Generalized anxiety disorder",def:"Persistent, excessive worry about many things."},
+{term:"Major depressive disorder",def:"Persistent sadness and loss of interest for 2+ weeks."},
+{term:"Bipolar disorder",def:"Alternating episodes of depression and mania."},
+{term:"Schizophrenia",def:"Severe disorder: hallucinations, delusions, disorganized thinking."},
+{term:"OCD",def:"Intrusive thoughts (obsessions) + repetitive behaviors (compulsions)."},
+{term:"Learned helplessness",def:"Passive resignation from perceived lack of control."},
+{term:"Psychotherapy",def:"Treatment using psychological techniques."},
+{term:"CBT",def:"Combines cognitive (thought change) and behavioral techniques."},
+{term:"Systematic desensitization",def:"Relaxation + graduated exposure for phobias."},
+{term:"SSRI",def:"Antidepressant increasing serotonin availability."},
+{term:"ECT",def:"Electrical currents through brain for severe depression."},
+{term:"Evidence-based practice",def:"Integrating research, expertise, and patient values."},
+].sort((a,b)=>a.term.localeCompare(b.term));
+
+// State
+let done=new Set();
+try{done=new Set(JSON.parse(localStorage.getItem("psychlearn-done")||"[]"));}catch(e){}
+let total=0; units.forEach(u=>total+=u.nodes.length);
+let qIdx=0,qAns=false,qScore=0,shuffled=[];
+
+function showTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='lessons')closeLesson();
+}
+
+function buildList(){
+  let h='<div class="duo-path">';
+  units.forEach(u=>{
+    h+=`<div class="duo-unit"><div class="duo-unit-header" style="background:${u.gradient};box-shadow:0 4px 0 ${u.shadow}"><div class="unit-label">Unit ${u.unitNum}</div><div class="unit-name">${u.label}</div></div><div class="duo-nodes">`;
+    u.nodes.forEach(n=>{
+      const id=u.unitNum+'-'+n.name, d=done.has(id), c=d?'done':'next';
+      h+=`<div class="duo-node ${c}" onclick="openLesson(${u.unitNum},'${n.name.replace(/'/g,"\\'")}','${n.sub.replace(/'/g,"\\'")}')"><button class="duo-btn ${c}">${d?'✓':n.icon}${d?'<div class="duo-checkmark">✓</div>':''}</button><div class="duo-node-label"><div class="node-name">${n.name}</div><div class="node-sub">${n.sub}</div></div></div>`;
+    });
+    h+='</div></div>';
+  });
+  h+='</div>';
+  document.getElementById('lesson-list').innerHTML=h;
+}
+
+function openLesson(u,name,sub){
+  document.getElementById('lesson-list').style.display='none';
+  document.getElementById('lesson-reader').style.display='block';
+  const content=L[name]||simpleContent(name,sub);
+  document.getElementById('lesson-content').innerHTML=`<div class="lesson-header"><h1>${name}</h1><p>Unit ${u} — ${sub}</p></div>${content}<button class="done-btn" onclick="markDone(${u},'${name.replace(/'/g,"\\'")}')">✓ Mark as Complete</button>`;
+  window.scrollTo(0,0);
+}
+function closeLesson(){
+  document.getElementById('lesson-list').style.display='block';
+  document.getElementById('lesson-reader').style.display='none';
+}
+function markDone(u,name){
+  done.add(u+'-'+name);
+  localStorage.setItem("psychlearn-done",JSON.stringify([...done]));
+  updateProgress();buildList();closeLesson();
+}
+function updateProgress(){
+  const p=(done.size/total)*100;
+  document.getElementById('course-progress').style.width=p+'%';
+  document.getElementById('progress-label').textContent=`Course progress — ${done.size} of ${total} lessons`;
+}
+
+// Quiz
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function startQuiz(){shuffled=shuffle(quizData);qIdx=0;qScore=0;renderQ();}
+function renderQ(){
+  if(qIdx>=shuffled.length){document.getElementById('quiz-container').innerHTML=`<div class="quiz-score-display"><div class="score-big">${qScore}/${shuffled.length}</div><div class="score-label">questions correct</div><p style="margin-top:16px;color:var(--muted);font-size:0.9rem">${qScore>=30?'🎉 Outstanding!':qScore>=24?'🌟 Great work!':qScore>=17?'👍 Good effort!':'📖 Keep studying!'}</p><button class="next-q-btn show" style="margin-top:20px" onclick="startQuiz()">Try Again</button></div>`;return;}
+  const q=shuffled[qIdx];qAns=false;
+  document.getElementById('quiz-container').innerHTML=`<div style="font-size:0.78rem;color:var(--muted);font-weight:700;margin-bottom:10px">Question ${qIdx+1} of ${shuffled.length}</div><div class="quiz-question">${q.q}</div><div class="quiz-options">${q.options.map((o,i)=>`<button class="quiz-option" onclick="ansQ(${i})">${o}</button>`).join('')}</div><div class="quiz-feedback" id="qfb"></div><button class="next-q-btn" id="nqb" onclick="nextQ()">Next →</button>`;
+}
+function ansQ(i){
+  if(qAns)return;qAns=true;const q=shuffled[qIdx],btns=document.querySelectorAll('.quiz-option');
+  btns.forEach(b=>b.disabled=true);btns[q.correct].classList.add('correct');
+  const fb=document.getElementById('qfb');
+  if(i===q.correct){qScore++;fb.className='quiz-feedback show correct';fb.textContent='✅ '+q.explain;}
+  else{btns[i].classList.add('wrong');fb.className='quiz-feedback show wrong';fb.textContent='❌ '+q.explain;}
+  document.getElementById('nqb').classList.add('show');
+}
+function nextQ(){qIdx++;renderQ();}
+
+// Glossary
+function renderGlossary(f=''){
+  const fl=glossaryData.filter(g=>g.term.toLowerCase().includes(f.toLowerCase())||g.def.toLowerCase().includes(f.toLowerCase()));
+  document.getElementById('glossary-list').innerHTML=fl.map(g=>`<div class="glossary-item"><div class="glossary-term">${g.term}</div><div class="glossary-def">${g.def}</div></div>`).join('');
+}
+function filterGlossary(){renderGlossary(document.getElementById('glossary-search').value);}
+
+// Chat
+async function sendChat(){
+  const inp=document.getElementById('chat-input'),msg=inp.value.trim();if(!msg)return;inp.value='';
+  appendMsg(msg,'user');document.getElementById('chat-send-btn').disabled=true;
+  const t=appendMsg('Thinking...','bot thinking');
+  try{
+    const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:"You are a friendly psychology tutor. Explain in plain language with examples and analogies. 3-5 short paragraphs. End with 💡 Key point.",messages:buildHist(msg)})});
+    const d=await r.json();t.remove();appendMsg(d.content?.[0]?.text||"Sorry, couldn't get a response.",'bot');
+  }catch(e){t.remove();appendMsg("AI chat requires an API connection.",'bot');}
+  document.getElementById('chat-send-btn').disabled=false;
+}
+function buildHist(m){const msgs=document.querySelectorAll('#chat-messages .msg'),h=[];msgs.forEach(x=>{if(x.classList.contains('thinking'))return;h.push({role:x.classList.contains('user')?'user':'assistant',content:x.textContent});});h.push({role:'user',content:m});return h.slice(-10);}
+function appendMsg(t,c){const b=document.getElementById('chat-messages'),d=document.createElement('div');d.className='msg '+c;d.textContent=t;b.appendChild(d);b.scrollTop=b.scrollHeight;return d;}
+function sendSuggestion(el){document.getElementById('chat-input').value=el.textContent;sendChat();}
+
+// Init
+buildList();updateProgress();startQuiz();renderGlossary();
+</script>
+</body>
+</html>
