@@ -2015,19 +2015,364 @@ Seligman and Maier revisited their original theory in 2016 and proposed a signif
 </div>`;
 
 // ═══ UNIT 5: MEMORY & COGNITION ═══
-L["Nature of Memory"]=`<div class="lesson-body"><h3>What Is Memory?</h3><p><span class="vocab-pill">Memory</span> is the persistence of learning over time through <strong>encoding</strong> (getting information in), <strong>storage</strong> (retaining it), and <strong>retrieval</strong> (getting it out). Without memory, every experience would be new, every person a stranger.</p><p>Memory is not a perfect recording — it is <span class="vocab-pill">reconstructive</span>, actively building and sometimes distorting our recollections.</p><div class="analogy-box"><strong>🔭 Think of it like this:</strong> Memory is not a video camera faithfully recording everything. It's more like a Wikipedia page — mostly accurate, but open to editing, revision, and even fabrication, often without the "author" realising it.</div></div>`;
+L["Nature of Memory"]=`<div class="lesson-body">
+<h3>What Is Memory?</h3>
+<p><span class="vocab-pill">Memory</span> is the persistence of learning over time through three fundamental processes: <strong>encoding</strong> (getting information in), <strong>storage</strong> (retaining it over time), and <strong>retrieval</strong> (getting it back out when needed). Without memory, every experience would be entirely new, every person a stranger, every skill forgotten. Memory is what gives continuity to our lives — it's the thread that connects your past self to your present self.</p>
 
-L["Encoding"]=`<div class="lesson-body"><h3>Getting Information In</h3><p><span class="vocab-pill">Encoding</span> converts information into a storable form. Not all information makes it into memory — we encode only a fraction of what we experience.</p><hr class="section-divider"><h3>Levels of Processing</h3><p><strong>Craik and Lockhart</strong> proposed that deeper processing creates more durable memories:</p><p>📋 <strong>Shallow processing</strong> — Physical features (font, appearance) — weakest</p><p>🔊 <strong>Phonemic processing</strong> — Sound-based — moderate</p><p>💡 <strong>Semantic processing</strong> — Meaning-based — strongest</p><hr class="section-divider"><h3>Effective Strategies</h3><p>🔗 <strong>Elaborative rehearsal</strong> — Connecting new info to existing knowledge</p><p>📦 <strong>Chunking</strong> — Grouping items into meaningful units (FBI-CIA-IBM = 3 chunks, not 9 letters)</p><p>🏛️ <strong>Mnemonics</strong> — Memory aids (method of loci, acronyms, peg-word)</p><p>📅 <span class="vocab-pill">Spacing effect</span> — Distributed practice beats cramming</p><p>✅ <strong>Testing effect</strong> — Retrieving information strengthens memory more than re-reading</p><div class="key-point"><span class="kp-icon">💡</span><span><strong>Study tip:</strong> The most effective learning strategy is self-testing with spaced repetition — exactly what flashcard apps are designed to do. Re-reading notes feels productive but is one of the least effective methods.</span></div></div>`;
+<p>Memory is not a single, unified system. It is a <strong>collection of interconnected systems</strong>, each handling different types of information, operating on different timescales, and relying on different brain structures. Understanding this multi-system architecture is one of the most important insights in cognitive psychology.</p>
 
-L["Storage"]=`<div class="lesson-body"><h3>Atkinson-Shiffrin Model</h3><p>Three memory stages:</p><p>1. <span class="vocab-pill">Sensory memory</span> — Holds all incoming sensory info very briefly. Iconic (visual): ~0.5s. Echoic (auditory): ~3-4s.</p><p>2. <span class="vocab-pill">Short-term/Working memory</span> — Holds ~<strong>7±2 items</strong> for ~20-30 seconds. <strong>Baddeley's model</strong> emphasises active processing: phonological loop, visuospatial sketchpad, central executive, episodic buffer.</p><p>3. <span class="vocab-pill">Long-term memory</span> — Virtually unlimited capacity and duration.</p><hr class="section-divider"><h3>Types of Long-Term Memory</h3><p>📖 <strong>Explicit (declarative)</strong> — Conscious recall:</p><p>&nbsp;&nbsp;• <strong>Episodic</strong> — Personal events ("my 10th birthday")</p><p>&nbsp;&nbsp;• <strong>Semantic</strong> — Facts ("Paris is France's capital")</p><p>🚲 <strong>Implicit (nondeclarative)</strong> — Unconscious:</p><p>&nbsp;&nbsp;• <strong>Procedural</strong> — Skills (riding a bike)</p><p>&nbsp;&nbsp;• <strong>Priming</strong> — Prior exposure influences later processing</p><hr class="section-divider"><h3>Biology of Memory</h3><p><span class="vocab-pill">Long-term potentiation (LTP)</span> — Repeated stimulation strengthens synaptic connections. The <strong>hippocampus</strong> consolidates new explicit memories. The <strong>amygdala</strong> tags emotional memories. Patient <strong>H.M.</strong> (Henry Molaison) had his hippocampi removed — he couldn't form new explicit memories but could still learn new skills, proving different memory systems rely on different brain structures.</p></div>`;
+<hr class="section-divider">
 
-L["Retrieval"]=`<div class="lesson-body"><h3>Getting Information Out</h3><p>📝 <strong>Recall</strong> — Generating information from memory (essay questions)</p><p>✅ <strong>Recognition</strong> — Identifying information from options (multiple choice)</p><p>🔄 <strong>Relearning</strong> — Previously learned material is learned faster the second time</p><hr class="section-divider"><h3>Retrieval Cues</h3><p>🏠 <span class="vocab-pill">Context-dependent memory</span> — We recall better in the same environment where we learned</p><p>😊 <span class="vocab-pill">State-dependent memory</span> — We recall better in the same emotional/physiological state</p><p>💭 <strong>Mood-congruent memory</strong> — We recall memories that match our current mood</p><p>🔗 <strong>Priming</strong> — Exposure to one stimulus activates related memories</p><div class="example-box"><strong>🔗 Real-life example:</strong> Studying in the same room where you'll take the exam can boost recall — context-dependent memory. This is why "mental reinstatement of context" is recommended for eyewitnesses.</div></div>`;
+<h3>Memory Is Reconstructive, Not Reproductive</h3>
+<p>Perhaps the most crucial — and most counterintuitive — fact about memory: it is <strong>NOT</strong> a video camera. You don't record experiences faithfully and play them back later. Instead, memory is <span class="vocab-pill">reconstructive</span> — each time you recall something, your brain actively rebuilds the memory from stored fragments, filling in gaps with expectations, beliefs, and post-event information. This reconstruction usually produces a reasonably accurate result, but it is always an interpretation, never an exact copy.</p>
 
-L["Forgetting"]=`<div class="lesson-body"><h3>The Forgetting Curve</h3><p><strong>Hermann Ebbinghaus</strong> pioneered the study of forgetting in the 1880s using nonsense syllables. His <span class="vocab-pill">forgetting curve</span> shows that we forget rapidly at first (about 67% within one day), then the rate levels off.</p><hr class="section-divider"><h3>Why We Forget</h3><p>❌ <strong>Encoding failure</strong> — Information never entered long-term memory</p><p>⏳ <strong>Storage decay</strong> — Memory traces fade over time</p><p>🔍 <strong>Retrieval failure</strong> — Info is stored but we can't access it (tip-of-the-tongue)</p><p>⬅️ <span class="vocab-pill">Proactive interference</span> — Old learning interferes with new recall</p><p>➡️ <span class="vocab-pill">Retroactive interference</span> — New learning interferes with old recall</p><p>🔒 <strong>Motivated forgetting</strong> — Freud's <span class="vocab-pill">repression</span> — pushing threatening memories out of awareness</p><div class="warning-box"><strong>⚠️ Common misconception:</strong> "I have a bad memory." Memory isn't a fixed trait. Most forgetting is caused by encoding failure (you weren't paying attention) or interference, not a defective memory system. Better strategies = better memory.</div></div>`;
+<div class="analogy-box">
+<strong>🔭 Think of it like this:</strong>
+Memory is not like a video recording that you replay. It's more like a Wikipedia page — mostly accurate, collaboratively written, but open to editing, revision, and even fabrication at any time, often without the "author" realising changes have been made. Every time you "remember" something, you're actually <em>reconstructing</em> it — and the reconstruction is influenced by everything that's happened since the original event.
+</div>
 
-L["Memory Distortion"]=`<div class="lesson-body"><h3>Memory Is Reconstructive</h3><p>Memory is not a video recording — it is an active <strong>reconstruction</strong> that can be distorted.</p><hr class="section-divider"><h3>Loftus and the Misinformation Effect</h3><p><strong>Elizabeth Loftus</strong> showed that exposure to misleading information after an event alters our memory of it. In her classic study, changing a single word in a question — "How fast were the cars going when they <em>smashed</em>?" vs "<em>hit</em>?" — changed speed estimates by 30% and made participants more likely to "remember" broken glass that was never there.</p><p>Her "Lost in the Mall" study planted a completely false childhood memory of being lost in a shopping mall — about 25% of participants came to believe it actually happened.</p><hr class="section-divider"><h3>Other Distortions</h3><p><span class="vocab-pill">Source monitoring error</span> — Attributing a memory to the wrong source</p><p><strong>Imagination inflation</strong> — Imagining an event can create confidence it happened</p><p><strong>False memories</strong> — Detailed memories of events that never occurred</p><div class="key-point"><span class="kp-icon">💡</span><span><strong>Legal implication:</strong> Eyewitness testimony is among the most compelling evidence in court — yet the Innocence Project has shown that mistaken eyewitness identification is the leading cause of wrongful convictions (in ~70% of DNA exoneration cases).</span></div></div>`;
+<hr class="section-divider">
 
-L["Thinking & Problem-Solving"]=`<div class="lesson-body"><h3>Cognitive Tools</h3><p>🗂️ <strong>Concepts</strong> — Mental categories grouping similar objects or ideas</p><p>🐦 <strong>Prototypes</strong> — Most typical example of a concept (robin = prototypical bird)</p><p>📋 <strong>Algorithms</strong> — Step-by-step procedures guaranteeing a solution (slow but reliable)</p><p>⚡ <strong>Heuristics</strong> — Mental shortcuts (fast but error-prone)</p><hr class="section-divider"><h3>Common Biases</h3><p>📺 <span class="vocab-pill">Availability heuristic</span> — Judging likelihood by how easily examples come to mind (we overestimate plane crash risk because crashes are vivid)</p><p>🎯 <strong>Representativeness heuristic</strong> — Judging by similarity to a prototype (ignoring base rates)</p><p>⚓ <strong>Anchoring bias</strong> — Over-relying on the first piece of information</p><p>✅ <span class="vocab-pill">Confirmation bias</span> — Seeking evidence that supports existing beliefs</p><p>💪 <strong>Overconfidence bias</strong> — Overestimating accuracy of our judgments</p><p>🖼️ <strong>Framing effect</strong> — How a question is worded changes decisions ("90% survival" sounds better than "10% mortality")</p><div class="example-box"><strong>🔗 Real-life example:</strong> After seeing news about a shark attack, people overestimate the risk of shark attacks (availability heuristic). In reality, you're far more likely to be killed by a vending machine falling on you than by a shark.</div></div>`;
+<h3>The Case of H.M.: A Revolution in Memory Research</h3>
+<p>Much of what we know about memory systems comes from one extraordinary patient: <strong>Henry Molaison</strong> (1926–2008), known as <strong>H.M.</strong> until his death. In 1953, surgeons removed both of H.M.'s <strong>hippocampi</strong> to treat severe epilepsy. The surgery controlled the seizures — but at a devastating cost.</p>
+
+<p>H.M. developed profound <span class="vocab-pill">anterograde amnesia</span> — the inability to form new conscious memories. He could remember his childhood and events before the surgery, but from 1953 until his death 55 years later, he lived in a permanent present. Every person he met was a stranger. Every meal was his first. He would read the same magazine with fresh interest every time.</p>
+
+<p>But here was the astonishing finding: H.M. could still learn new <strong>motor skills</strong>. He improved at mirror-tracing tasks (drawing while watching his hand in a mirror) over repeated sessions — yet had no memory of ever having practised. He also showed <strong>priming effects</strong> — exposure to information influenced his later behaviour even though he couldn't consciously recall the exposure.</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>H.M.'s legacy:</strong> His case proved two revolutionary things: (1) The hippocampus is essential for forming new <strong>explicit</strong> memories (conscious recall of facts and events). (2) Different types of memory depend on <strong>different brain systems</strong> — implicit memory (skills, habits, priming) doesn't require the hippocampus. H.M. is arguably the most studied individual in neuroscience history, and his case transformed our understanding of how memory works.</span>
+</div>
+
+<hr class="section-divider">
+
+<h3>Why Memory Matters for Everything Else</h3>
+<p>Memory isn't just one topic in psychology — it underlies virtually everything else. <strong>Learning</strong> is the acquisition of memories. <strong>Personality</strong> is partly the accumulation of memories that shape who we are. <strong>Therapy</strong> involves helping people reprocess traumatic memories or learn new cognitive patterns. <strong>Eyewitness testimony</strong> in the legal system depends entirely on memory accuracy. <strong>Education</strong> is fundamentally about creating durable, retrievable memories. Understanding how memory works — and fails — is essential knowledge for any psychologist, educator, lawyer, or informed citizen.</p>
+
+<div class="warning-box">
+<strong>⚠️ A humbling fact:</strong>
+Research consistently shows that people have far more confidence in their memories than is warranted. We feel certain that our memories are accurate records of what happened — but they are frequently distorted, incomplete, or entirely fabricated. This gap between confidence and accuracy has profound implications for eyewitness testimony, therapy, and everyday life.
+</div>
+</div>`;
+
+L["Encoding"]=`<div class="lesson-body">
+<h3>The Gateway to Memory</h3>
+<p><span class="vocab-pill">Encoding</span> is the process of converting information into a form that can be stored in memory. Think of it as the "save" function — but unlike a computer, your brain doesn't save everything. We encode only a <strong>tiny fraction</strong> of what we experience. The rest is lost immediately, never making it past sensory memory. The quality of encoding determines whether information will be remembered for seconds, hours, or a lifetime.</p>
+
+<hr class="section-divider">
+
+<h3>Levels of Processing</h3>
+<p><strong>Fergus Craik and Robert Lockhart</strong> (1972) proposed the <span class="vocab-pill">levels of processing framework</span>: the deeper and more meaningfully you process information, the better you remember it.</p>
+
+<p>📋 <strong>Shallow (structural) processing</strong> — Encoding based on physical features: What font is this word in? Is it uppercase or lowercase? This produces the <strong>weakest</strong> memories.</p>
+<p>🔊 <strong>Intermediate (phonemic) processing</strong> — Encoding based on sound: Does this word rhyme with "cat"? Moderately effective.</p>
+<p>💡 <strong>Deep (semantic) processing</strong> — Encoding based on <strong>meaning</strong>: Does this word fit in the sentence "The girl was ___"? What does this concept mean? How does it relate to what I already know? This produces the <strong>strongest, most durable</strong> memories.</p>
+
+<div class="example-box">
+<strong>🔗 The classic experiment:</strong>
+Craik and Tulving (1975) showed participants words and asked questions requiring different levels of processing: "Is this word in capital letters?" (structural), "Does this word rhyme with train?" (phonemic), or "Does this word fit in the sentence: 'The man sat at the ___'?" (semantic). Later, participants remembered far more words from the semantic condition — even though they hadn't been trying to memorise them. Deep processing creates strong memories <em>automatically</em>.
+</div>
+
+<hr class="section-divider">
+
+<h3>Encoding Strategies That Work</h3>
+
+<p>🔗 <strong>Elaborative rehearsal</strong> — Connecting new information to existing knowledge rather than simply repeating it. Asking "Why does this make sense?" or "How does this relate to something I already know?" forces deep processing. This is vastly more effective than <strong>maintenance rehearsal</strong> (rote repetition), which keeps information in working memory but doesn't transfer it to long-term storage effectively.</p>
+
+<p>📦 <span class="vocab-pill">Chunking</span> — Grouping individual items into larger meaningful units to expand working memory capacity. The sequence F-B-I-C-I-A-I-B-M is 9 items (beyond working memory's ~7 capacity), but FBI-CIA-IBM is just 3 chunks. Expert chess players don't memorise individual piece positions — they chunk familiar patterns of pieces.</p>
+
+<p>🏛️ <strong>Mnemonics</strong> — Memory aids that impose structure on otherwise unstructured material. The <strong>method of loci</strong> (memory palace) — imagining items placed along a familiar route — has been used since ancient Greece and is the technique used by memory champions. <strong>Acronyms</strong> (ROY G. BIV for rainbow colours, OCEAN for Big Five traits) and <strong>peg-word systems</strong> are also effective.</p>
+
+<p>📅 <span class="vocab-pill">Spacing effect</span> — Distributing study over time produces far stronger memories than massing it into one session (cramming). <strong>Ebbinghaus</strong> first demonstrated this in the 1880s, and it has been replicated hundreds of times since. Spacing works because each retrieval attempt strengthens the memory trace, and longer gaps between practice sessions make retrieval harder — and it's precisely this <strong>desirable difficulty</strong> that strengthens long-term retention.</p>
+
+<p>✅ <span class="vocab-pill">Testing effect</span> (retrieval practice) — The single most effective learning strategy. <strong>Actively retrieving</strong> information from memory (testing yourself, using flashcards, doing practice problems) strengthens memory far more than passively re-reading or re-watching. Each successful retrieval strengthens the neural pathway to that memory, making future retrieval easier.</p>
+
+<p>🖼️ <strong>Dual coding</strong> (Allan Paivio) — Encoding information both verbally and visually creates two independent memory traces, doubling the chances of retrieval. This is why diagrams, charts, and mental imagery enhance learning.</p>
+
+<p>👤 <strong>Self-reference effect</strong> — Information related to yourself is encoded more deeply than other information. Asking "How does this relate to my own experience?" boosts memory significantly.</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>The study strategy paradox:</strong> The strategies that <em>feel</em> most productive (re-reading, highlighting, summarising) are among the <em>least effective</em> for long-term learning. The strategies that feel harder and less comfortable (self-testing, spaced practice, interleaving different topics) produce the strongest learning. This gap between what feels effective and what <em>is</em> effective — called the <strong>illusion of fluency</strong> — means that students consistently choose inferior study methods because they mistake familiarity for understanding.</span>
+</div>
+
+<div class="warning-box">
+<strong>⚠️ Highlighting doesn't work:</strong>
+A comprehensive review by Dunlosky et al. (2013) rated the effectiveness of 10 common study strategies. <strong>Highlighting and re-reading</strong> were rated as having <strong>low utility</strong>. <strong>Practice testing</strong> and <strong>distributed practice</strong> were rated as having <strong>high utility</strong>. Yet most students spend most of their study time highlighting and re-reading. Understanding encoding research can literally transform academic performance.
+</div>
+</div>`;
+
+L["Storage"]=`<div class="lesson-body">
+<h3>The Three-Stage Model</h3>
+<p><strong>Richard Atkinson and Richard Shiffrin</strong> (1968) proposed the most influential model of memory storage — a three-stage process through which information flows:</p>
+
+<hr class="section-divider">
+
+<h3>Stage 1: Sensory Memory</h3>
+<p><span class="vocab-pill">Sensory memory</span> holds a complete, unprocessed record of all incoming sensory information for a very brief time — just long enough for the brain to decide what deserves further attention.</p>
+<p>👁️ <strong>Iconic memory</strong> (visual) — Lasts about <strong>0.5 seconds</strong>. George Sperling (1960) demonstrated this with his partial report technique: participants briefly shown 12 letters could report any 4 they were cued to recall — proving they had momentarily stored all 12, even though the image faded almost instantly.</p>
+<p>👂 <strong>Echoic memory</strong> (auditory) — Lasts about <strong>3-4 seconds</strong>. This is why you can "replay" the last few words someone said even if you weren't paying attention ("Wait, what did you just say?" and then the answer comes to you).</p>
+
+<hr class="section-divider">
+
+<h3>Stage 2: Short-Term / Working Memory</h3>
+<p><span class="vocab-pill">Short-term memory (STM)</span> holds a limited amount of information — about <strong>7 ± 2 items</strong> (George Miller, 1956) — for about <strong>20-30 seconds</strong> without rehearsal. This is why you can remember a phone number long enough to dial it but forget it immediately after.</p>
+
+<p><strong>Alan Baddeley's working memory model</strong> (1974) replaced the passive "short-term store" concept with an active, multi-component system:</p>
+<p>🔊 <strong>Phonological loop</strong> — Handles verbal and acoustic information (your "inner voice" that rehearses a phone number)</p>
+<p>🖼️ <strong>Visuospatial sketchpad</strong> — Handles visual and spatial information (your "mind's eye" that holds a mental map)</p>
+<p>👑 <strong>Central executive</strong> — The attention director that coordinates the other components and controls the focus of attention</p>
+<p>📋 <strong>Episodic buffer</strong> — Integrates information from the other components and long-term memory into coherent episodes</p>
+
+<div class="analogy-box">
+<strong>🔭 Think of it like this:</strong>
+Working memory is like your computer's RAM — it's where active processing happens. It's fast but limited in capacity. Long-term memory is like the hard drive — enormous capacity but slower to access. The central executive is like the CPU — deciding what gets processed. When your RAM is full (you're trying to remember too many things at once), performance degrades — you forget things, make errors, and feel overwhelmed.
+</div>
+
+<hr class="section-divider">
+
+<h3>Stage 3: Long-Term Memory</h3>
+<p><span class="vocab-pill">Long-term memory (LTM)</span> has virtually <strong>unlimited capacity</strong> and can store information for a lifetime. Information is transferred from working memory to LTM primarily through <strong>rehearsal</strong> (especially elaborative rehearsal) and <strong>consolidation</strong> (a process that strengthens memory traces, particularly during sleep).</p>
+
+<p>LTM is divided into two major systems — proved to be distinct by H.M.'s case:</p>
+
+<p>📖 <span class="vocab-pill">Explicit (declarative) memory</span> — Conscious, intentional recall of facts and events. Requires the <strong>hippocampus</strong> for formation. Two subtypes:</p>
+<p>&nbsp;&nbsp;📅 <strong>Episodic memory</strong> — Personal experiences and events, tagged with time and place ("I remember my 10th birthday party"). Mental time travel.</p>
+<p>&nbsp;&nbsp;📚 <strong>Semantic memory</strong> — General facts, concepts, and knowledge ("Paris is France's capital"). No personal context needed.</p>
+
+<p>🚲 <span class="vocab-pill">Implicit (nondeclarative) memory</span> — Unconscious, automatic recall. Does NOT require the hippocampus. Three subtypes:</p>
+<p>&nbsp;&nbsp;🎹 <strong>Procedural memory</strong> — Motor skills and habits (riding a bike, typing, playing piano). Relies on the <strong>cerebellum</strong> and <strong>basal ganglia</strong>.</p>
+<p>&nbsp;&nbsp;🔗 <strong>Priming</strong> — Prior exposure to a stimulus influences later processing, even without conscious recall. Seeing the word "doctor" makes you faster to recognise "nurse."</p>
+<p>&nbsp;&nbsp;🔔 <strong>Conditioned associations</strong> — Classically conditioned emotional and physiological responses.</p>
+
+<hr class="section-divider">
+
+<h3>The Biology of Memory Storage</h3>
+<p>🔬 <span class="vocab-pill">Long-term potentiation (LTP)</span> — When neurons fire together repeatedly, the synaptic connection between them strengthens — making future communication easier. This is believed to be the neural mechanism underlying learning and memory. "Neurons that fire together, wire together" (Hebb's rule).</p>
+<p>🧠 The <strong>hippocampus</strong> is the consolidation centre — converting short-term memories into long-term ones. It's not where memories are stored permanently (that's the cortex), but it's essential for the transfer process. This is why H.M. could recall old memories but not form new ones.</p>
+<p>😨 The <strong>amygdala</strong> tags emotionally significant memories, making them stronger and more vivid. This is why you remember exactly where you were during a shocking event (<span class="vocab-pill">flashbulb memories</span>) — though research shows these memories feel more accurate than they actually are.</p>
+<p>💤 <strong>Sleep</strong> plays a critical role in memory consolidation. During deep NREM sleep, the hippocampus "replays" the day's experiences to the cortex, strengthening important memories. REM sleep may help consolidate emotional and procedural memories. Sleep deprivation dramatically impairs memory formation.</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>The patient who changed everything:</strong> H.M. couldn't form new explicit memories but improved at motor tasks — proving explicit and implicit memory are separate systems. Clive Wearing, a British musician with even more severe amnesia, can still play piano beautifully despite having only a 7-second conscious memory span. These cases demonstrate that "memory" is not one thing — it's multiple systems that can be independently damaged or preserved.</span>
+</div>
+</div>`;
+
+L["Retrieval"]=`<div class="lesson-body">
+<h3>Getting Information Back Out</h3>
+<p><span class="vocab-pill">Retrieval</span> is the process of accessing stored information. Encoding and storage mean nothing if you can't retrieve the memory when you need it. Many "memory failures" are actually retrieval failures — the information is stored somewhere in your brain, but you can't find the path to it.</p>
+
+<hr class="section-divider">
+
+<h3>Three Types of Retrieval</h3>
+<p>📝 <strong>Recall</strong> — Generating information from memory without any cues. The hardest type. Examples: essay questions, remembering someone's name, "What's the capital of Mongolia?" You must search your memory and produce the answer from scratch.</p>
+<p>✅ <strong>Recognition</strong> — Identifying information from a set of options. Much easier than recall because the answer is present — you just need to match it to what's stored. Examples: multiple-choice questions, spotting a familiar face, police lineups.</p>
+<p>🔄 <strong>Relearning</strong> (savings method) — Ebbinghaus's brilliant measure: previously learned material is relearned <strong>faster</strong> the second time, even if you can't recall or recognise it. If a language course originally took 10 hours but relearning takes only 5 hours, the "savings" is 50% — proof that something was retained even though conscious access was lost.</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>Why this matters for studying:</strong> Multiple-choice exams test <strong>recognition</strong>; essay exams test <strong>recall</strong>. Recall is harder, so if you want to prepare for essay exams, you need to practise <em>recalling</em> information (self-testing, writing from memory), not just <em>recognising</em> it (re-reading notes and thinking "yes, I know that"). The testing effect works precisely because it practises retrieval.</span>
+</div>
+
+<hr class="section-divider">
+
+<h3>Retrieval Cues: The Keys That Unlock Memory</h3>
+<p>Memories are not stored in isolation — they are encoded within a web of associations. <span class="vocab-pill">Retrieval cues</span> are stimuli that help you access stored memories by activating these associations.</p>
+
+<p>🏠 <span class="vocab-pill">Context-dependent memory</span> — You recall better when you're in the <strong>same physical environment</strong> where you learned. Godden and Baddeley (1975) had scuba divers learn word lists either underwater or on land. Those tested in the same environment where they learned recalled 40% more words. This is why returning to your childhood home can flood you with memories you hadn't thought of in decades — the environment provides retrieval cues.</p>
+
+<p>😊 <span class="vocab-pill">State-dependent memory</span> — You recall better when you're in the <strong>same physiological or emotional state</strong> as when you learned. Information encoded while happy is retrieved more easily when happy; information encoded while sad, when sad. People who hide things while intoxicated sometimes can't find them until they're intoxicated again — the internal state provides retrieval cues.</p>
+
+<p>💭 <strong>Mood-congruent memory</strong> — Your current mood makes it easier to recall memories that <strong>match that mood</strong>. When depressed, you more easily recall sad memories, failures, and losses — which makes the depression worse, creating a vicious cycle. When happy, you recall positive memories. This mood-memory link helps explain why depression is self-perpetuating.</p>
+
+<p>🔗 <strong>Priming</strong> — Exposure to one stimulus activates related concepts in memory, making them more accessible. Seeing the word "bread" makes you faster to recognise "butter." Priming operates unconsciously — you're not aware that prior exposure is influencing you.</p>
+
+<div class="example-box">
+<strong>🔗 Practical applications:</strong>
+<strong>For students:</strong> Studying in the same room where you'll be tested can boost recall (context-dependent memory). If that's not possible, <strong>mental reinstatement of context</strong> — closing your eyes and imagining yourself back in the study environment — can help. <strong>For police:</strong> The Cognitive Interview technique instructs eyewitnesses to mentally reinstate the context of the crime (weather, emotions, location details) before attempting recall — this significantly improves the amount and accuracy of information retrieved.
+</div>
+
+<hr class="section-divider">
+
+<h3>The Serial Position Effect</h3>
+<p>When trying to recall a list of items, you're most likely to remember the <strong>first items</strong> (<span class="vocab-pill">primacy effect</span>) and the <strong>last items</strong> (<strong>recency effect</strong>), with poorer recall for middle items. This is the <span class="vocab-pill">serial position effect</span>.</p>
+
+<p>Why? First items benefit from more rehearsal and are encoded into long-term memory (primacy). Last items are still in working memory when you start recalling (recency). Middle items get neither advantage. If recall is delayed (even 30 seconds of distraction), the recency effect disappears but the primacy effect remains — because primacy reflects long-term memory while recency reflects short-term.</p>
+
+<div class="warning-box">
+<strong>⚠️ The tip-of-the-tongue phenomenon:</strong>
+You <em>know</em> you know something but can't quite retrieve it. You might recall the first letter, the number of syllables, or related words — but the target word stays frustratingly out of reach. This demonstrates that retrieval is not all-or-nothing — partial information can be accessed even when full retrieval fails. It also proves the information IS stored — the problem is finding the right retrieval path.
+</div>
+</div>`;
+
+L["Forgetting"]=`<div class="lesson-body">
+<h3>Ebbinghaus and the Forgetting Curve</h3>
+<p><strong>Hermann Ebbinghaus</strong> (1850–1909) was the first person to scientifically study memory and forgetting. Working alone in the 1880s, he memorised lists of nonsense syllables (like DAX, BUP, ZOL — chosen to avoid meaningful associations) and tested himself at various intervals to measure how much he retained.</p>
+
+<p>His most famous finding was the <span class="vocab-pill">forgetting curve</span>: memory declines steeply at first — about <strong>56% forgotten within one hour</strong> and <strong>67% within one day</strong> — then the rate of forgetting gradually levels off. Information that survives the first day tends to persist much longer.</p>
+
+<p>Ebbinghaus also discovered the <strong>spacing effect</strong> — distributed practice produces better retention than massed practice — and the <strong>savings method</strong> (relearning is faster than original learning). These findings, made over 140 years ago, remain among the most robust and practically useful in all of psychology.</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>The practical lesson:</strong> The forgetting curve explains why cramming is so inefficient. You might remember 80% the night before the exam, but within a week, most of it is gone. Spaced repetition — reviewing material at expanding intervals (1 day, 3 days, 1 week, 2 weeks) — works <em>with</em> the forgetting curve rather than against it, catching information just before it's about to be forgotten and strengthening it each time.</span>
+</div>
+
+<hr class="section-divider">
+
+<h3>Why We Forget</h3>
+<p>Forgetting is not a single process — it occurs for several distinct reasons:</p>
+
+<p>❌ <strong>Encoding failure</strong> — The most common cause. Information never made it into long-term memory in the first place because we weren't paying attention. Can you recall which direction the head faces on a penny? Most people can't — they've seen thousands of pennies but never encoded that detail because it wasn't relevant.</p>
+
+<p>⏳ <strong>Storage decay</strong> — Memory traces may fade over time if not reinforced. The physical neural connections that encode a memory weaken without reactivation. However, this explanation is controversial — some researchers argue that memories don't truly "decay" but become increasingly difficult to retrieve as new memories accumulate.</p>
+
+<p>🔍 <strong>Retrieval failure</strong> — The information IS stored but you can't access it. The tip-of-the-tongue phenomenon demonstrates this — you know the word exists but can't quite reach it. Given the right cue, the memory often comes flooding back, proving it was there all along.</p>
+
+<hr class="section-divider">
+
+<h3>Interference: Memories Competing</h3>
+<p>The most well-supported explanation for everyday forgetting is <strong>interference</strong> — memories compete with and disrupt each other:</p>
+
+<p>⬅️ <span class="vocab-pill">Proactive interference</span> — <strong>Old</strong> learning interferes with recall of <strong>new</strong> information. Your old phone number keeps intruding when you try to recall your new one. Your previous Spanish vocabulary interferes with learning French.</p>
+
+<p>➡️ <span class="vocab-pill">Retroactive interference</span> — <strong>New</strong> learning interferes with recall of <strong>old</strong> information. After learning your new phone number, you struggle to recall your old one. After taking a French class, your Spanish gets rusty.</p>
+
+<div class="example-box">
+<strong>🔗 Real-life example:</strong>
+A student studies psychology in the morning and biology in the afternoon. When tested on psychology that evening, they do worse than someone who studied psychology and then relaxed all afternoon. Why? Retroactive interference — the biology material interfered with the psychology material. This is why studying two similar subjects back-to-back is less effective than spacing them apart or inserting a very different activity between them.
+</div>
+
+<hr class="section-divider">
+
+<h3>Motivated Forgetting</h3>
+<p><strong>Sigmund Freud</strong> proposed that we sometimes forget because we are <em>motivated</em> to do so. <span class="vocab-pill">Repression</span> is the unconscious pushing of threatening or traumatic memories out of conscious awareness — a defence mechanism to protect the ego from painful material.</p>
+
+<p>The concept of repression is one of the most controversial in all of psychology. While there is evidence that people can avoid thinking about unwanted memories (thought suppression, directed forgetting), the idea that traumatic memories are <strong>completely</strong> blocked from consciousness and can be reliably "recovered" later has very limited scientific support.</p>
+
+<div class="warning-box">
+<strong>⚠️ The recovered memory controversy:</strong>
+In the 1990s, some therapists used suggestive techniques (hypnosis, guided imagery, repeated questioning) to help clients "recover" supposedly repressed memories of childhood abuse. Research by Elizabeth Loftus and others demonstrated that these techniques can create convincing <strong>false memories</strong> — detailed, emotional memories of events that never happened. Many "recovered" memories led to false accusations, destroyed families, and wrongful prosecutions. This controversy led to major reforms in therapeutic practice and highlights the danger of assuming all memories are accurate.
+</div>
+
+<hr class="section-divider">
+
+<h3>Is Forgetting Always Bad?</h3>
+<p>Counterintuitively, forgetting serves important functions. Forgetting irrelevant information reduces interference and makes retrieval of important information easier. People with hyperthymesia (highly superior autobiographical memory) — who remember almost every day of their lives — report that the constant flood of memories can be distressing and overwhelming. Some forgetting is not a bug — it's a feature.</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>"I have a bad memory" is almost always wrong.</strong> Memory isn't a fixed trait like height. Most forgetting is caused by encoding failure (you weren't paying attention), interference (too much similar information), or poor retrieval cues — not a defective memory system. Better encoding strategies (deep processing, spacing, testing) and better retrieval conditions (appropriate cues, context reinstatement) can dramatically improve anyone's memory. Your memory isn't bad — your strategies might be.</span>
+</div>
+</div>`;
+
+L["Memory Distortion"]=`<div class="lesson-body">
+<h3>Memory Is Constructive, Not Reproductive</h3>
+<p>One of the most important — and most unsettling — findings in cognitive psychology: memory is not a faithful recording of the past. It is an active <strong>reconstruction</strong> that can be distorted, edited, and even entirely fabricated — often without the person having any awareness that their memory is inaccurate. We don't replay memories; we rebuild them each time, and the rebuilding is influenced by our current knowledge, beliefs, expectations, and post-event information.</p>
+
+<hr class="section-divider">
+
+<h3>Elizabeth Loftus and the Misinformation Effect</h3>
+<p><strong>Elizabeth Loftus</strong> has conducted some of the most consequential research in all of psychology, demonstrating just how malleable memory is.</p>
+
+<div class="example-box">
+<strong>🔗 The "Smashed" Study (Loftus & Palmer, 1974):</strong>
+Participants watched a video of a car accident and were then asked: "How fast were the cars going when they _____ each other?" The blank was filled with either "hit," "contacted," "bumped," "collided," or <strong>"smashed."</strong> Those who heard "smashed" estimated speeds 30% higher than those who heard "contacted." More remarkably, when asked a week later whether they saw broken glass in the video (there was none), those in the "smashed" condition were <strong>more than twice as likely</strong> to falsely "remember" seeing glass. A single word in a question had altered the memory itself.
+</div>
+
+<p>This phenomenon — where <strong>post-event information</strong> distorts the original memory — is called the <span class="vocab-pill">misinformation effect</span>. It has been replicated hundreds of times and demonstrates that memories are not fixed recordings but dynamic representations that can be updated by later information.</p>
+
+<div class="example-box">
+<strong>🔗 The "Lost in the Mall" Study (Loftus & Pickrell, 1995):</strong>
+Loftus went further — could she plant an entirely <strong>false memory</strong>? She gave participants booklets containing three true childhood stories (provided by relatives) and one completely fabricated story about being lost in a shopping mall at age 5. After reading and "trying to remember," about <strong>25%</strong> of participants came to believe the false event had actually happened — some adding vivid sensory details, emotions, and narrative embellishments to the fabricated memory. They weren't lying — they genuinely believed the false memory was real.
+</div>
+
+<hr class="section-divider">
+
+<h3>Other Memory Distortions</h3>
+<p>🔀 <span class="vocab-pill">Source monitoring error</span> — Remembering information correctly but attributing it to the <strong>wrong source</strong>. You might remember a fact but think you read it in a textbook when you actually heard it in a conversation. Or you might remember something you imagined as something that actually happened. This is why people sometimes plagiarise unconsciously — they remember the idea but forget where it came from.</p>
+
+<p>🧠 <strong>Imagination inflation</strong> — Simply <em>imagining</em> an event can increase your confidence that it actually occurred. After imagining breaking a window as a child, you become more likely to believe it really happened. This is why suggestive therapeutic techniques (guided imagery, repeated imagination) can create false memories.</p>
+
+<p>📸 <strong>Flashbulb memories</strong> — Vivid, detailed memories of shocking events (where you were during 9/11, for example). They <em>feel</em> like perfect recordings, but research shows they are subject to the same distortions as ordinary memories. People's accounts of 9/11 changed significantly over time, even as their confidence in those accounts remained rock-solid.</p>
+
+<p>📋 <strong>Schema-driven distortion</strong> — Our <span class="vocab-pill">schemas</span> (mental frameworks for organising knowledge) influence both encoding and retrieval. We tend to remember schema-consistent information and fill in gaps with schema-based assumptions. If you have a schema of "what happens at a restaurant," you might "remember" being given a menu even if it didn't happen — because menus fit the schema.</p>
+
+<hr class="section-divider">
+
+<h3>Implications for Eyewitness Testimony</h3>
+<p>Memory distortion research has had an enormous impact on the legal system:</p>
+
+<div class="warning-box">
+<strong>⚠️ A justice system problem:</strong>
+Eyewitness testimony is among the most <strong>compelling</strong> evidence in court — juries find confident eyewitnesses very persuasive. Yet it is among the <strong>least reliable</strong>. The <strong>Innocence Project</strong> has used DNA evidence to exonerate over 375 wrongfully convicted individuals in the United States. In approximately <strong>69%</strong> of these cases, <strong>mistaken eyewitness identification</strong> was a contributing factor — making it the single leading cause of wrongful conviction.
+</div>
+
+<p>Key problems with eyewitness testimony:</p>
+<p>• Witnesses are susceptible to the misinformation effect (post-event information from media, other witnesses, or police questions alters their memory)</p>
+<p>• Confidence does NOT reliably predict accuracy — witnesses can be highly confident and completely wrong</p>
+<p>• Cross-race identifications are significantly less accurate (the <strong>own-race bias</strong>)</p>
+<p>• Weapon focus — the presence of a weapon draws attention away from the perpetrator's face</p>
+<p>• Stress and arousal can impair encoding of details</p>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>Reform efforts:</strong> Based on decades of memory research, psychologists have recommended reforms to lineup procedures: using double-blind administration (the officer conducting the lineup doesn't know who the suspect is), sequential presentation (showing one person at a time rather than all at once), explicit instruction that the perpetrator may not be present, and immediate recording of the witness's confidence level. These reforms have been adopted by many police departments and have been shown to reduce false identifications.</span>
+</div>
+</div>`;
+
+L["Thinking & Problem-Solving"]=`<div class="lesson-body">
+<h3>The Building Blocks of Thought</h3>
+<p><span class="vocab-pill">Cognition</span> includes all mental activities associated with thinking, knowing, remembering, and communicating. We think using several mental tools:</p>
+
+<p>🗂️ <strong>Concepts</strong> — Mental categories that group similar objects, events, or ideas. Concepts allow us to organise the world efficiently — you don't need to learn about each individual dog you encounter because you have a concept of "dog" that generalises across all dogs.</p>
+<p>🐦 <span class="vocab-pill">Prototypes</span> — The most typical example of a concept. A robin is a more prototypical bird than a penguin. When you hear "bird," the image that comes to mind is your prototype. We categorise new items by comparing them to our prototypes — which can lead to errors when atypical examples are encountered.</p>
+
+<hr class="section-divider">
+
+<h3>Problem-Solving Strategies</h3>
+<p>📋 <strong>Algorithms</strong> — Methodical, step-by-step procedures that <strong>guarantee</strong> a solution (if one exists). Trying every possible combination to crack a lock is an algorithm. They're reliable but often painfully slow.</p>
+<p>⚡ <strong>Heuristics</strong> — Mental shortcuts or rules of thumb that are <strong>faster</strong> but <strong>error-prone</strong>. We use heuristics because they work well most of the time and save enormous cognitive resources. But they can lead to systematic biases and errors.</p>
+<p>💡 <strong>Insight</strong> — Sudden "aha!" moments where the solution appears fully formed (Köhler's chimps). Insight involves restructuring the problem — seeing it from a new angle.</p>
+
+<hr class="section-divider">
+
+<h3>Obstacles to Problem-Solving</h3>
+<p>🔒 <span class="vocab-pill">Fixation</span> — The inability to see a problem from a new perspective because you're stuck in a particular approach.</p>
+<p>🧠 <strong>Mental set</strong> — Approaching a problem with a strategy that worked in the past, even when it's no longer effective. If you always solve problems by Method A, you might persist with Method A even when Method B would be much faster.</p>
+<p>🔧 <strong>Functional fixedness</strong> — The inability to see new uses for familiar objects. In <strong>Duncker's candle problem</strong> (1945), participants were given a candle, matches, and a box of thumbtacks and asked to mount the candle on the wall. Most failed because they saw the box only as a container for tacks — not as a potential shelf. Those who could overcome functional fixedness tacked the empty box to the wall and placed the candle on it.</p>
+
+<hr class="section-divider">
+
+<h3>Heuristics and Cognitive Biases</h3>
+<p><strong>Daniel Kahneman</strong> and <strong>Amos Tversky</strong> (Nobel Prize, 2002) revolutionised our understanding of human judgment by identifying systematic biases in how we think:</p>
+
+<p>📺 <span class="vocab-pill">Availability heuristic</span> — Judging the likelihood of events based on how easily examples come to mind. Vivid, dramatic, recent events are more "available" — so we overestimate the risk of shark attacks, plane crashes, and terrorist attacks (vivid, heavily reported) while underestimating the risk of heart disease, diabetes, and car accidents (common but less dramatic).</p>
+
+<p>🎯 <strong>Representativeness heuristic</strong> — Judging the likelihood of something by how well it matches our prototype or stereotype, while <strong>ignoring base rates</strong> (actual statistical probabilities). If someone is described as quiet, orderly, and detail-oriented, people guess "librarian" rather than "salesperson" — ignoring the fact that there are vastly more salespeople than librarians.</p>
+
+<p>⚓ <strong>Anchoring bias</strong> — Over-relying on the first piece of information offered (the "anchor"), even when it's irrelevant. Real estate agents shown an inflated asking price estimate the home's value significantly higher than those shown a lower asking price — even experienced agents are affected.</p>
+
+<p>✅ <span class="vocab-pill">Confirmation bias</span> — The tendency to search for, interpret, and remember information that <strong>confirms</strong> existing beliefs while ignoring contradictory evidence. This is arguably the most pervasive and dangerous of all cognitive biases — it affects scientists, doctors, jurors, politicians, and ordinary people in every domain of life. It's the reason people on opposite sides of a debate can both feel that the evidence supports their position.</p>
+
+<p>💪 <strong>Overconfidence bias</strong> — Overestimating the accuracy of our knowledge and judgments. Studies consistently show that when people say they're "100% certain" of an answer, they're wrong about <strong>15-20%</strong> of the time. Overconfidence affects experts too — financial analysts, doctors, and political pundits are all more confident in their predictions than accuracy warrants.</p>
+
+<p>🖼️ <span class="vocab-pill">Framing effect</span> — How information is <strong>presented</strong> influences decisions, even when the underlying facts are identical. "90% survival rate" sounds much better than "10% mortality rate" — yet they describe exactly the same reality. Patients are more willing to undergo surgery when told the survival rate rather than the mortality rate.</p>
+
+<p>🔙 <strong>Hindsight bias</strong> — After learning an outcome, we believe "I knew it all along." After an election, most people claim they predicted the winner. This makes us poor at learning from experience because we overestimate our predictive ability.</p>
+
+<div class="example-box">
+<strong>🔗 Kahneman's System 1 and System 2:</strong>
+Kahneman proposed that we have two thinking systems. <strong>System 1</strong> is fast, automatic, intuitive, and effortless — it uses heuristics and handles most of daily life. <strong>System 2</strong> is slow, deliberate, analytical, and effortful — it handles complex problems and can override System 1, but it's lazy and easily depleted. Most cognitive biases occur because System 1 takes shortcuts that System 2 fails to correct. Understanding this framework helps explain why smart people make predictable errors in judgment.
+</div>
+
+<div class="key-point">
+<span class="kp-icon">💡</span>
+<span><strong>Why this matters beyond the classroom:</strong> Cognitive biases affect every domain of human life — medicine (doctors misdiagnose due to anchoring and confirmation bias), law (jurors are swayed by framing), finance (investors make predictable errors), politics (voters are manipulated through framing), and personal relationships (confirmation bias maintains false beliefs about partners). Becoming aware of these biases doesn't eliminate them, but it can help you make better decisions — and recognise when others are exploiting them.</span>
+</div>
+</div>`;
 
 // ═══ UNIT 6: DEVELOPMENTAL PSYCHOLOGY ═══
 L["Intro to Development"]=`<div class="lesson-body"><h3>The Study of Change</h3><p><span class="vocab-pill">Developmental psychology</span> studies how and why people change — physically, cognitively, and socially — across the entire lifespan, from conception to death.</p><p>Three fundamental questions:</p><p>1. <strong>Nature vs. nurture</strong> — How do genes and environment interact?</p><p>2. <strong>Continuity vs. stages</strong> — Is development gradual or a series of distinct stages?</p><p>3. <strong>Stability vs. change</strong> — Do traits persist or do we become different people?</p><div class="key-point"><span class="kp-icon">💡</span><span>Modern developmental psychologists agree these are NOT either/or questions. Development reflects a complex <strong>interaction</strong> of biological and environmental forces. Genes influence which environments we seek out (gene-environment correlation), and environments influence which genes are expressed (epigenetics).</span></div></div>`;
