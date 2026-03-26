@@ -498,10 +498,7 @@
   .kw-popup-term { font-weight:800;color:var(--purple);font-size:0.85rem;margin-bottom:4px; }
   .kw-popup-def { font-size:0.82rem;color:var(--muted);line-height:1.5; }
 
-  /* BOOKMARK */
-  .bookmark-btn { position:absolute;top:8px;right:8px;background:none;border:none;font-size:1.2rem;cursor:pointer;opacity:0.4;transition:opacity 0.2s; }
-  .bookmark-btn:hover,.bookmark-btn.active { opacity:1; }
-  .lesson-section-wrap { position:relative; }
+  /* (bookmarks removed) */
 
   /* FLASHCARD TAB */
   .fc-card { perspective:800px;width:100%;max-width:400px;margin:0 auto 20px;height:220px;cursor:pointer; }
@@ -4369,33 +4366,41 @@ function openLesson(u,name,sub){
   let content=L[name]||simpleContent(name,sub);
   const safeName=name.replace(/'/g,"\\'");
   // Make vocab-pills clickable with popup definitions
-  const glossMap={};glossaryData.forEach(g=>glossMap[g.term.toLowerCase()]=g.def);
+  const glossMap={};glossaryData.forEach(g=>{glossMap[g.term.toLowerCase()]=g.def;const words=g.term.toLowerCase().split(/[\s()]+/);words.forEach(w=>{if(w.length>3&&!glossMap[w])glossMap[w]=g.def;});});
   content=content.replace(/<span class="vocab-pill">([^<]+)<\/span>/g,(match,term)=>{
-    const def=glossMap[term.toLowerCase()]||'';
+    const tl=term.toLowerCase();
+    const def=glossMap[tl]||glossMap[tl.replace(/s$/,'')]||glossMap[tl.replace(/tion$/,'')]||'';
     if(!def)return match;
-    const eDef=def.replace(/'/g,"&#39;").replace(/"/g,"&quot;");
-    return `<span class="vocab-pill" style="cursor:pointer" onclick="event.stopPropagation();toggleKwPopup(this,'${term.replace(/'/g,"&#39;")}','${eDef}')">${term}</span>`;
+    const eDef=def.replace(/\\/g,'\\\\').replace(/'/g,"&#39;").replace(/"/g,"&quot;").replace(/\n/g,' ');
+    const eTerm=term.replace(/'/g,"&#39;");
+    return `<span class="vocab-pill kw-clickable" data-term="${eTerm}" data-def="${eDef}">${term}</span>`;
   });
-  const bmKey=u+'-'+name;
-  const isBm=bookmarks[bmKey];
-  document.getElementById('lesson-content').innerHTML=`<div class="lesson-header" style="position:relative"><h1>${name}</h1><p>Unit ${u} — ${sub}</p><button class="bookmark-btn ${isBm?'active':''}" onclick="toggleBookmark('${bmKey}',this)" title="Bookmark this lesson">${isBm?'🔖':'🏷️'}</button></div>${content}<button class="deep-dive-btn" id="dd-btn" onclick="toggleDeepDive('${safeName}','${sub.replace(/'/g,"\\'")}')">🔬 Deep Dive — Go Deeper</button><div id="deep-dive-area"></div><button class="done-btn" onclick="markDone(${u},'${safeName}')">✓ Mark as Complete</button>`;
+  document.getElementById('lesson-content').innerHTML=`<div class="lesson-header"><h1>${name}</h1><p>Unit ${u} — ${sub}</p></div>${content}<button class="deep-dive-btn" id="dd-btn" onclick="toggleDeepDive('${safeName}','${sub.replace(/'/g,"\\'")}')">🔬 Deep Dive — Go Deeper</button><div id="deep-dive-area"></div><button class="done-btn" onclick="markDone(${u},'${safeName}')">✓ Mark as Complete</button>`;
+  // Attach click handlers to vocab pills
+  document.querySelectorAll('.kw-clickable').forEach(el=>{
+    el.style.cursor='pointer';
+    el.addEventListener('click',function(e){
+      e.stopPropagation();
+      toggleKwPopup(this,this.dataset.term,this.dataset.def);
+    });
+  });
   window.scrollTo(0,0);
 }
 function toggleKwPopup(el,term,def){
-  const existing=el.parentElement.querySelector('.kw-popup');
-  document.querySelectorAll('.kw-popup').forEach(p=>p.remove());
-  if(existing)return;
+  // Remove any existing popups
+  const existing=document.querySelector('.kw-popup');
+  if(existing){existing.remove();if(existing.parentElement===el)return;}
+  // Create popup
   const popup=document.createElement('div');
   popup.className='kw-popup';
-  popup.innerHTML=`<div class="kw-popup-term">${term}</div><div class="kw-popup-def">${def}</div>`;
+  popup.innerHTML='<div class="kw-popup-term">'+term+'</div><div class="kw-popup-def">'+def+'</div>';
   el.style.position='relative';
+  el.style.display='inline-block';
   el.appendChild(popup);
-  setTimeout(()=>document.addEventListener('click',function h(){popup.remove();document.removeEventListener('click',h);},{once:true}),10);
-}
-function toggleBookmark(key,btn){
-  if(bookmarks[key]){delete bookmarks[key];btn.classList.remove('active');btn.textContent='🏷️';}
-  else{bookmarks[key]=true;btn.classList.add('active');btn.textContent='🔖';}
-  localStorage.setItem('psychlearn-bookmarks',JSON.stringify(bookmarks));
+  // Close on click anywhere else
+  setTimeout(function(){document.addEventListener('click',function handler(e){
+    if(!popup.contains(e.target)){popup.remove();document.removeEventListener('click',handler);}
+  });},50);
 }
 let ddOpen=false;
 function toggleDeepDive(name,sub){
@@ -4579,22 +4584,25 @@ function getDueCards(){
     return sa.due-sb.due;
   });
 }
-let fcCards=[],fcIdx=0,fcFlipped=false;
+let fcCards=[],fcIdx=0,fcFlipped=false,fcMode='due';
 function initFlashcards(){
-  fcCards=getDueCards();fcIdx=0;fcFlipped=false;
-  const due=fcCards.length,learned=glossaryData.length-due;
-  document.getElementById('fc-stats').innerHTML=`<span class="fc-stat">📚 ${glossaryData.length} total</span><span class="fc-stat">✅ ${learned} learned</span><span class="fc-stat">📋 ${Math.min(due,20)} due</span>`;
+  fcCards=fcMode==='all'?shuffle([...glossaryData]):getDueCards();
+  fcIdx=0;fcFlipped=false;
+  const due=getDueCards().length,learned=glossaryData.length-due;
+  document.getElementById('fc-stats').innerHTML=`<span class="fc-stat">📚 ${glossaryData.length} total</span><span class="fc-stat">✅ ${learned} learned</span><span class="fc-stat">📋 ${due} due</span><span class="fc-stat" style="cursor:pointer;border:1.5px solid var(--purple)" onclick="fcMode=fcMode==='due'?'all':'due';initFlashcards()">${fcMode==='due'?'📋 Due Only':'🔄 All Cards'}</span>`;
   renderFlashcard();
 }
 function renderFlashcard(){
   const c=document.getElementById('fc-container');
-  if(fcIdx>=fcCards.length||fcIdx>=20){
-    c.innerHTML=`<div style="text-align:center;padding:40px"><p style="font-size:1.5rem;margin-bottom:8px">🎉</p><p style="color:var(--muted)">All due cards reviewed!</p><button class="done-btn" style="margin-top:16px;max-width:200px;display:inline-block" onclick="Object.keys(fcSchedule).length===0?initFlashcards():initFlashcards()">Study Again</button></div>`;
+  const limit=fcMode==='all'?fcCards.length:Math.min(fcCards.length,20);
+  if(fcIdx>=limit){
+    c.innerHTML=`<div style="text-align:center;padding:40px"><p style="font-size:1.5rem;margin-bottom:8px">🎉</p><p style="color:var(--muted)">${fcMode==='all'?'All cards reviewed!':'All due cards reviewed!'}</p><button class="done-btn" style="margin-top:16px;max-width:200px;display:inline-block" onclick="initFlashcards()">Study Again</button></div>`;
     return;
   }
   fcFlipped=false;
   const card=fcCards[fcIdx];
-  c.innerHTML=`<p style="text-align:center;font-size:0.8rem;color:var(--muted);margin-bottom:8px">${fcIdx+1} / ${Math.min(fcCards.length,20)}</p>
+  const fcLimit=fcMode==='all'?fcCards.length:Math.min(fcCards.length,20);
+  c.innerHTML=`<p style="text-align:center;font-size:0.8rem;color:var(--muted);margin-bottom:8px">${fcIdx+1} / ${fcLimit}</p>
   <div class="fc-card" id="fc-card" onclick="flipCard()">
     <div class="fc-inner">
       <div class="fc-face fc-front">${card.term}</div>
