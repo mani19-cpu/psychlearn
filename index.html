@@ -477,6 +477,64 @@
   .glossary-term { font-weight: 800; font-size: 0.95rem; color: var(--purple); }
   .glossary-def { font-size: 0.88rem; color: var(--muted); margin-top: 3px; line-height: 1.5; }
 
+  /* SEARCH */
+  .search-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding-top:80px;backdrop-filter:blur(4px); }
+  .search-box { background:var(--card);border:2px solid var(--purple);border-radius:16px;width:90%;max-width:560px;max-height:70vh;overflow:hidden;display:flex;flex-direction:column; }
+  .search-input { background:transparent;border:none;border-bottom:1.5px solid var(--border);padding:16px 20px;font-family:inherit;font-size:1rem;color:var(--text);outline:none;width:100%; }
+  .search-results { overflow-y:auto;padding:8px;max-height:55vh; }
+  .search-result { padding:12px 16px;border-radius:10px;cursor:pointer;margin-bottom:4px; }
+  .search-result:hover { background:var(--purple-light); }
+  .search-result-title { font-weight:700;font-size:0.9rem;color:var(--text); }
+  .search-result-type { font-size:0.72rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:0.05em; }
+  .search-result-snippet { font-size:0.82rem;color:var(--muted);margin-top:4px;line-height:1.4; }
+
+  /* READING PROGRESS */
+  .reading-progress { position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--purple),#a87de0);z-index:150;transition:width 0.1s; }
+
+  /* KEYWORD POPUP */
+  .kw-popup-wrap { position:relative;display:inline; }
+  .kw-popup { position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--card);border:1.5px solid var(--purple);border-radius:12px;padding:12px 16px;width:280px;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,0.3); }
+  .kw-popup::after { content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:8px solid transparent;border-top-color:var(--purple); }
+  .kw-popup-term { font-weight:800;color:var(--purple);font-size:0.85rem;margin-bottom:4px; }
+  .kw-popup-def { font-size:0.82rem;color:var(--muted);line-height:1.5; }
+
+  /* BOOKMARK */
+  .bookmark-btn { position:absolute;top:8px;right:8px;background:none;border:none;font-size:1.2rem;cursor:pointer;opacity:0.4;transition:opacity 0.2s; }
+  .bookmark-btn:hover,.bookmark-btn.active { opacity:1; }
+  .lesson-section-wrap { position:relative; }
+
+  /* FLASHCARD TAB */
+  .fc-card { perspective:800px;width:100%;max-width:400px;margin:0 auto 20px;height:220px;cursor:pointer; }
+  .fc-inner { width:100%;height:100%;position:relative;transition:transform 0.5s;transform-style:preserve-3d; }
+  .fc-card.flipped .fc-inner { transform:rotateY(180deg); }
+  .fc-face { position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center; }
+  .fc-front { background:var(--card);border:2px solid var(--purple);font-size:1.05rem;font-weight:600;line-height:1.5; }
+  .fc-back { background:var(--purple-light);border:2px solid var(--purple);transform:rotateY(180deg);font-size:0.92rem;color:var(--muted);line-height:1.6; }
+  .fc-controls { display:flex;gap:10px;justify-content:center;margin-top:16px; }
+  .fc-btn { padding:10px 20px;border-radius:10px;border:none;font-family:inherit;font-weight:700;font-size:0.88rem;cursor:pointer;transition:all 0.2s; }
+  .fc-btn.again { background:var(--red-light);color:var(--red);border:1.5px solid var(--red); }
+  .fc-btn.hard { background:var(--yellow-light);color:var(--yellow);border:1.5px solid var(--yellow); }
+  .fc-btn.good { background:var(--green-light);color:var(--green);border:1.5px solid var(--green); }
+  .fc-btn.easy { background:var(--blue-light);color:var(--blue);border:1.5px solid var(--blue); }
+  .fc-btn:hover { transform:translateY(-2px); }
+  .fc-stats { display:flex;gap:12px;justify-content:center;margin-bottom:16px;font-size:0.8rem;color:var(--muted); }
+  .fc-stat { padding:4px 12px;border-radius:8px;background:var(--purple-light);font-weight:700; }
+
+  /* COLLAPSIBLE UNITS */
+  .duo-unit-header { cursor:pointer;user-select:none; }
+  .unit-toggle { float:right;font-size:0.8rem;opacity:0.7; }
+  .duo-nodes.collapsed { display:none; }
+
+  /* QUIZ FILTER */
+  .quiz-filter { display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px; }
+  .quiz-filter-btn { padding:6px 14px;border-radius:99px;border:1.5px solid var(--border);background:none;color:var(--muted);font-family:inherit;font-size:0.78rem;font-weight:700;cursor:pointer; }
+  .quiz-filter-btn.active { background:var(--purple);color:white;border-color:var(--purple); }
+
+  /* DIAGRAM */
+  .diagram-wrap { margin:20px 0;border-radius:14px;overflow:hidden;border:1.5px solid var(--border);background:#1e1830; }
+  .diagram-wrap svg { width:100%;height:auto;display:block; }
+  .diagram-label { font-size:0.75rem;color:var(--muted);text-align:center;padding:8px;font-weight:600; }
+
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
@@ -509,10 +567,20 @@
 
 <nav>
   <button class="tab-btn active" onclick="showTab('lessons',this)">📖 Lessons</button>
+  <button class="tab-btn" onclick="showTab('flashcards',this)">🃏 Flashcards</button>
   <button class="tab-btn" onclick="showTab('quiz',this)">🧪 Quiz</button>
   <button class="tab-btn" onclick="showTab('chat',this)">💬 Ask AI</button>
   <button class="tab-btn" onclick="showTab('glossary',this)">📚 Glossary</button>
+  <button class="tab-btn" onclick="openSearch()" style="margin-left:auto">🔍</button>
 </nav>
+
+<div class="reading-progress" id="reading-progress" style="width:0"></div>
+<div class="search-overlay" id="search-overlay" style="display:none" onclick="if(event.target===this)closeSearch()">
+  <div class="search-box">
+    <input class="search-input" id="search-input" placeholder="Search lessons, glossary, quizzes..." oninput="doSearch(this.value)" autofocus>
+    <div class="search-results" id="search-results"></div>
+  </div>
+</div>
 
 <div class="app-body">
   <div class="tab-panel active" id="tab-lessons">
@@ -523,10 +591,20 @@
     </div>
   </div>
 
+  <div class="tab-panel" id="tab-flashcards">
+    <div class="card">
+      <div class="card-title">🃏 Spaced Repetition Flashcards</div>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:14px;">SM-2 algorithm adapts to your knowledge. Cards you struggle with appear more often.</p>
+      <div class="fc-stats" id="fc-stats"></div>
+      <div id="fc-container"></div>
+    </div>
+  </div>
+
   <div class="tab-panel" id="tab-quiz">
     <div class="card">
       <div class="card-title">🧪 Quick Quiz</div>
-      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:18px;">34 questions across all 10 units. Randomised each time!</p>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:12px;">Filter by unit or quiz all topics.</p>
+      <div class="quiz-filter" id="quiz-filter"></div>
       <div id="quiz-container"></div>
     </div>
   </div>
@@ -4259,12 +4337,21 @@ function showTab(id,btn){
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
   if(id==='lessons')closeLesson();
+  if(id==='flashcards')initFlashcards();
 }
 
+function toggleUnit(num){
+  collapsed[num]=!collapsed[num];
+  localStorage.setItem('psychlearn-collapsed',JSON.stringify(collapsed));
+  buildList();
+}
 function buildList(){
   let h='<div class="duo-path">';
   units.forEach(u=>{
-    h+=`<div class="duo-unit"><div class="duo-unit-header" style="background:${u.gradient};box-shadow:0 4px 0 ${u.shadow}"><div class="unit-label">Unit ${u.unitNum}</div><div class="unit-name">${u.label}</div></div><div class="duo-nodes">`;
+    const doneCount=u.nodes.filter(n=>done.has(u.unitNum+'-'+n.name)).length;
+    const isCollapsed=collapsed[u.unitNum]!==false;// default collapsed
+    const allDone=doneCount===u.nodes.length;
+    h+=`<div class="duo-unit"><div class="duo-unit-header" style="background:${u.gradient};box-shadow:0 4px 0 ${u.shadow}" onclick="toggleUnit(${u.unitNum})"><div class="unit-label">Unit ${u.unitNum} · ${doneCount}/${u.nodes.length} <span class="unit-toggle">${isCollapsed?'▶':'▼'}</span></div><div class="unit-name">${u.label}</div>${allDone?'<div style="font-size:0.7rem;margin-top:4px;opacity:0.8">✓ Complete</div>':''}</div><div class="duo-nodes${isCollapsed?' collapsed':''}">`;
     u.nodes.forEach(n=>{
       const id=u.unitNum+'-'+n.name, d=done.has(id), c=d?'done':'next';
       h+=`<div class="duo-node ${c}" onclick="openLesson(${u.unitNum},'${n.name.replace(/'/g,"\\'")}','${n.sub.replace(/'/g,"\\'")}')"><button class="duo-btn ${c}">${d?'✓':n.icon}${d?'<div class="duo-checkmark">✓</div>':''}</button><div class="duo-node-label"><div class="node-name">${n.name}</div><div class="node-sub">${n.sub}</div></div></div>`;
@@ -4276,12 +4363,39 @@ function buildList(){
 }
 
 function openLesson(u,name,sub){
+  lastScrollY=window.scrollY;
   document.getElementById('lesson-list').style.display='none';
   document.getElementById('lesson-reader').style.display='block';
-  const content=L[name]||simpleContent(name,sub);
+  let content=L[name]||simpleContent(name,sub);
   const safeName=name.replace(/'/g,"\\'");
-  document.getElementById('lesson-content').innerHTML=`<div class="lesson-header"><h1>${name}</h1><p>Unit ${u} — ${sub}</p></div>${content}<button class="deep-dive-btn" id="dd-btn" onclick="toggleDeepDive('${safeName}','${sub.replace(/'/g,"\\'")}')">🔬 Deep Dive — Go Deeper</button><div id="deep-dive-area"></div><button class="done-btn" onclick="markDone(${u},'${safeName}')">✓ Mark as Complete</button>`;
+  // Make vocab-pills clickable with popup definitions
+  const glossMap={};glossaryData.forEach(g=>glossMap[g.term.toLowerCase()]=g.def);
+  content=content.replace(/<span class="vocab-pill">([^<]+)<\/span>/g,(match,term)=>{
+    const def=glossMap[term.toLowerCase()]||'';
+    if(!def)return match;
+    const eDef=def.replace(/'/g,"&#39;").replace(/"/g,"&quot;");
+    return `<span class="vocab-pill" style="cursor:pointer" onclick="event.stopPropagation();toggleKwPopup(this,'${term.replace(/'/g,"&#39;")}','${eDef}')">${term}</span>`;
+  });
+  const bmKey=u+'-'+name;
+  const isBm=bookmarks[bmKey];
+  document.getElementById('lesson-content').innerHTML=`<div class="lesson-header" style="position:relative"><h1>${name}</h1><p>Unit ${u} — ${sub}</p><button class="bookmark-btn ${isBm?'active':''}" onclick="toggleBookmark('${bmKey}',this)" title="Bookmark this lesson">${isBm?'🔖':'🏷️'}</button></div>${content}<button class="deep-dive-btn" id="dd-btn" onclick="toggleDeepDive('${safeName}','${sub.replace(/'/g,"\\'")}')">🔬 Deep Dive — Go Deeper</button><div id="deep-dive-area"></div><button class="done-btn" onclick="markDone(${u},'${safeName}')">✓ Mark as Complete</button>`;
   window.scrollTo(0,0);
+}
+function toggleKwPopup(el,term,def){
+  const existing=el.parentElement.querySelector('.kw-popup');
+  document.querySelectorAll('.kw-popup').forEach(p=>p.remove());
+  if(existing)return;
+  const popup=document.createElement('div');
+  popup.className='kw-popup';
+  popup.innerHTML=`<div class="kw-popup-term">${term}</div><div class="kw-popup-def">${def}</div>`;
+  el.style.position='relative';
+  el.appendChild(popup);
+  setTimeout(()=>document.addEventListener('click',function h(){popup.remove();document.removeEventListener('click',h);},{once:true}),10);
+}
+function toggleBookmark(key,btn){
+  if(bookmarks[key]){delete bookmarks[key];btn.classList.remove('active');btn.textContent='🏷️';}
+  else{bookmarks[key]=true;btn.classList.add('active');btn.textContent='🔖';}
+  localStorage.setItem('psychlearn-bookmarks',JSON.stringify(bookmarks));
 }
 let ddOpen=false;
 function toggleDeepDive(name,sub){
@@ -4331,9 +4445,12 @@ async function generateDeepDive(name,sub){
 <p>💡 <strong>Pro tip:</strong> To unlock AI-generated personalised deep dives, add your Anthropic API key in the browser console: <code>localStorage.setItem('psychlearn-api-key','sk-ant-...')</code></p>
 </div>`;
 }
+let lastScrollY=0;
 function closeLesson(){
   document.getElementById('lesson-list').style.display='block';
   document.getElementById('lesson-reader').style.display='none';
+  document.getElementById('reading-progress').style.width='0';
+  window.scrollTo(0,lastScrollY);
 }
 function markDone(u,name){
   done.add(u+'-'+name);
@@ -4346,11 +4463,81 @@ function updateProgress(){
   document.getElementById('progress-label').textContent=`Course progress — ${done.size} of ${total} lessons`;
 }
 
-// Quiz
+// Reading progress bar
+window.addEventListener('scroll',()=>{
+  if(document.getElementById('lesson-reader').style.display==='block'){
+    const h=document.documentElement.scrollHeight-window.innerHeight;
+    const pct=h>0?(window.scrollY/h)*100:0;
+    document.getElementById('reading-progress').style.width=pct+'%';
+  }
+});
+
+// Collapsible units
+const collapsed=JSON.parse(localStorage.getItem('psychlearn-collapsed')||'{}');
+
+// Bookmarks
+const bookmarks=JSON.parse(localStorage.getItem('psychlearn-bookmarks')||'{}');
+
+// Search
+function openSearch(){document.getElementById('search-overlay').style.display='flex';document.getElementById('search-input').value='';document.getElementById('search-input').focus();document.getElementById('search-results').innerHTML='<p style="color:var(--muted);padding:20px;text-align:center;font-size:0.88rem">Type to search across all content...</p>';}
+function closeSearch(){document.getElementById('search-overlay').style.display='none';}
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch();}if(e.key==='Escape')closeSearch();});
+
+function doSearch(q){
+  const r=document.getElementById('search-results');
+  if(!q||q.length<2){r.innerHTML='<p style="color:var(--muted);padding:20px;text-align:center;font-size:0.88rem">Type at least 2 characters...</p>';return;}
+  const ql=q.toLowerCase();const results=[];
+  // Search lessons
+  units.forEach(u=>{u.nodes.forEach(n=>{
+    const content=L[n.name]||'';
+    const textContent=content.replace(/<[^>]+>/g,' ').toLowerCase();
+    if(n.name.toLowerCase().includes(ql)||n.sub.toLowerCase().includes(ql)||textContent.includes(ql)){
+      let snippet='';
+      const idx=textContent.indexOf(ql);
+      if(idx>=0)snippet='...'+textContent.substring(Math.max(0,idx-40),idx+60).trim()+'...';
+      results.push({type:'Lesson',title:n.name,sub:'Unit '+u.unitNum+' — '+n.sub,snippet,action:`openLesson(${u.unitNum},'${n.name.replace(/'/g,"\\'")}','${n.sub.replace(/'/g,"\\'")}')`});
+    }
+  });});
+  // Search glossary
+  glossaryData.forEach(g=>{
+    if(g.term.toLowerCase().includes(ql)||g.def.toLowerCase().includes(ql)){
+      results.push({type:'Glossary',title:g.term,sub:g.def.substring(0,80)+'...',snippet:'',action:"showTab('glossary',document.querySelectorAll('.tab-btn')[5]);document.getElementById('glossary-search').value='"+q+"';filterGlossary();"});
+    }
+  });
+  // Search quiz
+  quizData.forEach(q2=>{
+    if(q2.q.toLowerCase().includes(ql)||q2.explain.toLowerCase().includes(ql)){
+      results.push({type:'Quiz',title:q2.q.substring(0,60)+'...',sub:q2.explain.substring(0,80),snippet:'',action:"showTab('quiz',document.querySelectorAll('.tab-btn')[2])"});
+    }
+  });
+  if(results.length===0){r.innerHTML='<p style="color:var(--muted);padding:20px;text-align:center">No results found.</p>';return;}
+  r.innerHTML=results.slice(0,15).map(x=>`<div class="search-result" onclick="${x.action};closeSearch()"><div class="search-result-type">${x.type}</div><div class="search-result-title">${x.title}</div><div class="search-result-snippet">${x.sub}</div></div>`).join('');
+}
+
+// Quiz with unit filter
+let quizUnit='all';
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
-function startQuiz(){shuffled=shuffle(quizData);qIdx=0;qScore=0;renderQ();}
+function buildQuizFilter(){
+  const unitNames=['All',...units.map(u=>'Unit '+u.unitNum)];
+  document.getElementById('quiz-filter').innerHTML=unitNames.map((n,i)=>`<button class="quiz-filter-btn${i===0?' active':''}" onclick="setQuizUnit(${i===0?"'all'":i},this)">${n}</button>`).join('');
+}
+function setQuizUnit(u,btn){
+  quizUnit=u;
+  document.querySelectorAll('.quiz-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  startQuiz();
+}
+function getFilteredQuiz(){
+  if(quizUnit==='all')return quizData;
+  const unitLabel=units[quizUnit-1]?.label||'';
+  // Map unit numbers to quiz categories
+  const catMap={1:['Foundations'],2:['Biological'],3:['Sensation','Perception'],4:['Learning','Conditioning'],5:['Memory','Cognition'],6:['Development'],7:['Personality'],8:['Social'],9:['Abnormal','Depression','Anxiety','Schizophrenia','OCD','Bipolar','Dissociative'],10:['Therapy','Treatment','CBT']};
+  const cats=catMap[quizUnit]||[unitLabel];
+  return quizData.filter(q=>cats.some(c=>q.q.toLowerCase().includes(c.toLowerCase())||q.explain.toLowerCase().includes(c.toLowerCase())));
+}
+function startQuiz(){const filtered=getFilteredQuiz();shuffled=shuffle(filtered.length>0?filtered:quizData);qIdx=0;qScore=0;renderQ();}
 function renderQ(){
-  if(qIdx>=shuffled.length){document.getElementById('quiz-container').innerHTML=`<div class="quiz-score-display"><div class="score-big">${qScore}/${shuffled.length}</div><div class="score-label">questions correct</div><p style="margin-top:16px;color:var(--muted);font-size:0.9rem">${qScore>=30?'🎉 Outstanding!':qScore>=24?'🌟 Great work!':qScore>=17?'👍 Good effort!':'📖 Keep studying!'}</p><button class="next-q-btn show" style="margin-top:20px" onclick="startQuiz()">Try Again</button></div>`;return;}
+  if(qIdx>=shuffled.length){const pct=shuffled.length>0?Math.round(qScore/shuffled.length*100):0;document.getElementById('quiz-container').innerHTML=`<div class="quiz-score-display"><div class="score-big">${qScore}/${shuffled.length}</div><div class="score-label">questions correct (${pct}%)</div><p style="margin-top:16px;color:var(--muted);font-size:0.9rem">${pct>=90?'🎉 Outstanding!':pct>=70?'🌟 Great work!':pct>=50?'👍 Good effort!':'📖 Keep studying!'}</p><button class="next-q-btn show" style="margin-top:20px" onclick="startQuiz()">Try Again</button></div>`;return;}
   const q=shuffled[qIdx];qAns=false;
   document.getElementById('quiz-container').innerHTML=`<div style="font-size:0.78rem;color:var(--muted);font-weight:700;margin-bottom:10px">Question ${qIdx+1} of ${shuffled.length}</div><div class="quiz-question">${q.q}</div><div class="quiz-options">${q.options.map((o,i)=>`<button class="quiz-option" onclick="ansQ(${i})">${o}</button>`).join('')}</div><div class="quiz-feedback" id="qfb"></div><button class="next-q-btn" id="nqb" onclick="nextQ()">Next →</button>`;
 }
@@ -4363,6 +4550,73 @@ function ansQ(i){
   document.getElementById('nqb').classList.add('show');
 }
 function nextQ(){qIdx++;renderQ();}
+
+// SM-2 Flashcard System
+const fcSchedule=JSON.parse(localStorage.getItem('psychlearn-fc')||'{}');
+function sm2(card,quality){
+  // quality: 0=again, 1=hard, 2=good, 3=easy
+  let s=fcSchedule[card.term]||{ease:2.5,interval:1,reps:0,due:0};
+  if(quality<2){s.reps=0;s.interval=1;}
+  else{
+    if(s.reps===0)s.interval=1;
+    else if(s.reps===1)s.interval=6;
+    else s.interval=Math.round(s.interval*s.ease);
+    s.reps++;
+  }
+  s.ease=Math.max(1.3,s.ease+0.1-0.08*(3-quality)-0.02*(3-quality)*(3-quality));
+  s.due=Date.now()+s.interval*86400000;
+  fcSchedule[card.term]=s;
+  localStorage.setItem('psychlearn-fc',JSON.stringify(fcSchedule));
+}
+function getDueCards(){
+  const now=Date.now();
+  return glossaryData.filter(g=>{
+    const s=fcSchedule[g.term];
+    return !s||s.due<=now;
+  }).sort((a,b)=>{
+    const sa=fcSchedule[a.term],sb=fcSchedule[b.term];
+    if(!sa)return -1;if(!sb)return 1;
+    return sa.due-sb.due;
+  });
+}
+let fcCards=[],fcIdx=0,fcFlipped=false;
+function initFlashcards(){
+  fcCards=getDueCards();fcIdx=0;fcFlipped=false;
+  const due=fcCards.length,learned=glossaryData.length-due;
+  document.getElementById('fc-stats').innerHTML=`<span class="fc-stat">📚 ${glossaryData.length} total</span><span class="fc-stat">✅ ${learned} learned</span><span class="fc-stat">📋 ${Math.min(due,20)} due</span>`;
+  renderFlashcard();
+}
+function renderFlashcard(){
+  const c=document.getElementById('fc-container');
+  if(fcIdx>=fcCards.length||fcIdx>=20){
+    c.innerHTML=`<div style="text-align:center;padding:40px"><p style="font-size:1.5rem;margin-bottom:8px">🎉</p><p style="color:var(--muted)">All due cards reviewed!</p><button class="done-btn" style="margin-top:16px;max-width:200px;display:inline-block" onclick="Object.keys(fcSchedule).length===0?initFlashcards():initFlashcards()">Study Again</button></div>`;
+    return;
+  }
+  fcFlipped=false;
+  const card=fcCards[fcIdx];
+  c.innerHTML=`<p style="text-align:center;font-size:0.8rem;color:var(--muted);margin-bottom:8px">${fcIdx+1} / ${Math.min(fcCards.length,20)}</p>
+  <div class="fc-card" id="fc-card" onclick="flipCard()">
+    <div class="fc-inner">
+      <div class="fc-face fc-front">${card.term}</div>
+      <div class="fc-face fc-back">${card.def}</div>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:0.78rem;color:var(--muted);margin-bottom:12px">Tap card to flip</p>
+  <div class="fc-controls" id="fc-controls" style="display:none">
+    <button class="fc-btn again" onclick="rateCard(0)">Again</button>
+    <button class="fc-btn hard" onclick="rateCard(1)">Hard</button>
+    <button class="fc-btn good" onclick="rateCard(2)">Good</button>
+    <button class="fc-btn easy" onclick="rateCard(3)">Easy</button>
+  </div>`;
+}
+function flipCard(){
+  if(fcFlipped)return;fcFlipped=true;
+  document.getElementById('fc-card').classList.add('flipped');
+  document.getElementById('fc-controls').style.display='flex';
+}
+function rateCard(q){
+  sm2(fcCards[fcIdx],q);fcIdx++;renderFlashcard();
+}
 
 // Glossary
 function renderGlossary(f=''){
@@ -4387,7 +4641,7 @@ function appendMsg(t,c){const b=document.getElementById('chat-messages'),d=docum
 function sendSuggestion(el){document.getElementById('chat-input').value=el.textContent;sendChat();}
 
 // Init
-buildList();updateProgress();startQuiz();renderGlossary();
+buildList();updateProgress();buildQuizFilter();startQuiz();renderGlossary();initFlashcards();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
 </script>
 </body>
