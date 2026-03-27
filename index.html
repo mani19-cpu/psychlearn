@@ -501,21 +501,31 @@
   /* (bookmarks removed) */
 
   /* FLASHCARD TAB */
-  .fc-card { perspective:800px;width:100%;max-width:400px;margin:0 auto 20px;height:220px;cursor:pointer; }
-  .fc-inner { width:100%;height:100%;position:relative;transition:transform 0.5s;transform-style:preserve-3d; }
-  .fc-card.flipped .fc-inner { transform:rotateY(180deg); }
-  .fc-face { position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center; }
-  .fc-front { background:var(--card);border:2px solid var(--purple);font-size:1.05rem;font-weight:600;line-height:1.5; }
-  .fc-back { background:var(--purple-light);border:2px solid var(--purple);transform:rotateY(180deg);font-size:0.92rem;color:var(--muted);line-height:1.6; }
-  .fc-controls { display:flex;gap:10px;justify-content:center;margin-top:16px; }
-  .fc-btn { padding:10px 20px;border-radius:10px;border:none;font-family:inherit;font-weight:700;font-size:0.88rem;cursor:pointer;transition:all 0.2s; }
-  .fc-btn.again { background:var(--red-light);color:var(--red);border:1.5px solid var(--red); }
-  .fc-btn.hard { background:var(--yellow-light);color:var(--yellow);border:1.5px solid var(--yellow); }
-  .fc-btn.good { background:var(--green-light);color:var(--green);border:1.5px solid var(--green); }
-  .fc-btn.easy { background:var(--blue-light);color:var(--blue);border:1.5px solid var(--blue); }
-  .fc-btn:hover { transform:translateY(-2px); }
+  .fc-toolbar { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center; }
+  .fc-toolbar-btn { padding:7px 14px;border-radius:10px;border:1.5px solid var(--border);background:none;color:var(--muted);font-family:inherit;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s; }
+  .fc-toolbar-btn:hover { border-color:var(--purple);color:var(--text); }
+  .fc-toolbar-btn.active { background:var(--purple);color:white;border-color:var(--purple); }
+  .fc-search { flex:1;min-width:150px;padding:7px 14px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-family:inherit;font-size:0.85rem;outline:none; }
+  .fc-search:focus { border-color:var(--purple); }
+  .fc-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px; }
+  .fc-item { background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all 0.2s;position:relative; }
+  .fc-item:hover { border-color:var(--purple);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.2); }
+  .fc-item-term { font-weight:800;font-size:0.92rem;color:var(--purple);margin-bottom:6px; }
+  .fc-item-def { font-size:0.82rem;color:var(--muted);line-height:1.5; }
+  .fc-item-actions { position:absolute;top:8px;right:8px;display:flex;gap:4px; }
+  .fc-item-btn { background:none;border:none;font-size:0.85rem;cursor:pointer;opacity:0.4;padding:2px; }
+  .fc-item-btn:hover { opacity:1; }
   .fc-stats { display:flex;gap:12px;justify-content:center;margin-bottom:16px;font-size:0.8rem;color:var(--muted); }
   .fc-stat { padding:4px 12px;border-radius:8px;background:var(--purple-light);font-weight:700; }
+  .fc-modal { position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px); }
+  .fc-modal-box { background:var(--card);border-radius:16px;padding:24px;width:90%;max-width:440px;border:2px solid var(--purple); }
+  .fc-modal-title { font-weight:800;font-size:1.1rem;margin-bottom:16px; }
+  .fc-modal-input { width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;background:transparent;color:var(--text);font-family:inherit;font-size:0.9rem;margin-bottom:10px;outline:none;resize:vertical; }
+  .fc-modal-input:focus { border-color:var(--purple); }
+  .fc-modal-btns { display:flex;gap:8px;justify-content:flex-end;margin-top:16px; }
+  .fc-modal-btn { padding:8px 18px;border-radius:10px;border:none;font-family:inherit;font-weight:700;font-size:0.88rem;cursor:pointer; }
+  .fc-modal-btn.primary { background:var(--purple);color:white; }
+  .fc-modal-btn.secondary { background:var(--border);color:var(--muted); }
 
   /* COLLAPSIBLE UNITS */
   .duo-unit-header { cursor:pointer;user-select:none; }
@@ -590,8 +600,9 @@
 
   <div class="tab-panel" id="tab-flashcards">
     <div class="card">
-      <div class="card-title">🃏 Spaced Repetition Flashcards</div>
-      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:14px;">SM-2 algorithm adapts to your knowledge. Cards you struggle with appear more often.</p>
+      <div class="card-title">🃏 Flashcards</div>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:14px;">All your flashcards in one place. Click to flip, edit, or add your own.</p>
+      <div class="fc-toolbar" id="fc-toolbar"></div>
       <div class="fc-stats" id="fc-stats"></div>
       <div id="fc-container"></div>
     </div>
@@ -4365,13 +4376,53 @@ function openLesson(u,name,sub){
   document.getElementById('lesson-reader').style.display='block';
   let content=L[name]||simpleContent(name,sub);
   const safeName=name.replace(/'/g,"\\'");
-  // Make vocab-pills clickable with popup definitions
-  const glossMap={};glossaryData.forEach(g=>{glossMap[g.term.toLowerCase()]=g.def;const words=g.term.toLowerCase().split(/[\s()]+/);words.forEach(w=>{if(w.length>3&&!glossMap[w])glossMap[w]=g.def;});});
+  // Make ALL vocab-pills clickable with popup definitions (fuzzy match)
+  const glossMap={};
+  glossaryData.forEach(g=>{
+    glossMap[g.term.toLowerCase()]=g.def;
+    // Also index by individual words and common variants
+    g.term.toLowerCase().split(/[\s(),\/]+/).forEach(w=>{if(w.length>3&&!glossMap[w])glossMap[w]=g.def;});
+  });
+  // Also add custom entries for common vocab-pill terms not in glossary
+  const customDefs={
+    'empirical science':'A science based on systematic observation, measurement, and experimentation rather than theory alone.',
+    'tabula rasa':'Latin for "blank slate" — the idea that the mind begins empty and is shaped entirely by experience (John Locke).',
+    'nativism':'The philosophical view that certain knowledge or abilities are innate, present from birth (Plato).',
+    'empiricism':'The view that all knowledge comes from sensory experience, not innate ideas (Aristotle, Locke).',
+    'mind-body dualism':'Descartes\' idea that mind and body are fundamentally different substances that interact.',
+    'replication crisis':'The finding that many published psychology studies fail to replicate, leading to major reforms in research practices.',
+    'depolarization':'The process during an action potential when sodium ions rush into the neuron, making the inside briefly positive.',
+    'biological preparedness':'The evolutionary predisposition to learn certain associations more easily than others.',
+    'cognitive map':'A mental representation of spatial layout, first demonstrated by Tolman in rats navigating mazes.',
+    'anhedonia':'The inability to experience pleasure from activities normally found enjoyable; a symptom of depression.',
+    'counterconditioning':'Replacing an unwanted conditioned response with a new, incompatible response (e.g., relaxation instead of fear).',
+    'habituation':'Decreased response to a repeated, harmless stimulus — the simplest form of learning.',
+    'echoic memory':'Brief auditory sensory memory lasting about 3-4 seconds.',
+    'iconic memory':'Brief visual sensory memory lasting about 0.5 seconds.',
+    'flashbulb memories':'Vivid, detailed memories of shocking or emotional events that feel like perfect recordings but are subject to distortion.',
+    'superordinate goals':'Shared goals that require cooperation between groups, used to reduce intergroup conflict.',
+    'culture-bound syndromes':'Patterns of symptoms recognised as disorders within specific cultures but not universally.',
+    'reciprocal determinism':'Bandura\'s concept that behavior, personal factors, and environment all continuously influence each other.',
+    'ego integrity':'In Erikson\'s theory, the sense of satisfaction when reflecting on a meaningful life.',
+    'generativity':'In Erikson\'s theory, contributing to future generations through parenting, mentoring, or creative work.',
+  };
+  Object.entries(customDefs).forEach(([k,v])=>{if(!glossMap[k])glossMap[k]=v;});
   content=content.replace(/<span class="vocab-pill">([^<]+)<\/span>/g,(match,term)=>{
-    const tl=term.toLowerCase();
-    const def=glossMap[tl]||glossMap[tl.replace(/s$/,'')]||glossMap[tl.replace(/tion$/,'')]||'';
+    const tl=term.toLowerCase().trim();
+    // Try exact, then without trailing s, then first word, then partial
+    let def=glossMap[tl]||glossMap[tl.replace(/s$/,'')]||glossMap[tl.replace(/ing$/,'')]||'';
+    if(!def){
+      // Try matching first significant word
+      const words=tl.split(/[\s()]+/);
+      for(const w of words){if(w.length>4&&glossMap[w]){def=glossMap[w];break;}}
+    }
+    if(!def){
+      // Try finding a glossary entry that contains this term
+      const found=glossaryData.find(g=>g.term.toLowerCase().includes(tl)||tl.includes(g.term.toLowerCase()));
+      if(found)def=found.def;
+    }
     if(!def)return match;
-    const eDef=def.replace(/\\/g,'\\\\').replace(/'/g,"&#39;").replace(/"/g,"&quot;").replace(/\n/g,' ');
+    const eDef=def.replace(/\\/g,'').replace(/'/g,"&#39;").replace(/"/g,"&quot;").replace(/\n/g,' ');
     const eTerm=term.replace(/'/g,"&#39;");
     return `<span class="vocab-pill kw-clickable" data-term="${eTerm}" data-def="${eDef}">${term}</span>`;
   });
@@ -4556,74 +4607,120 @@ function ansQ(i){
 }
 function nextQ(){qIdx++;renderQ();}
 
-// SM-2 Flashcard System
-const fcSchedule=JSON.parse(localStorage.getItem('psychlearn-fc')||'{}');
-function sm2(card,quality){
-  // quality: 0=again, 1=hard, 2=good, 3=easy
-  let s=fcSchedule[card.term]||{ease:2.5,interval:1,reps:0,due:0};
-  if(quality<2){s.reps=0;s.interval=1;}
-  else{
-    if(s.reps===0)s.interval=1;
-    else if(s.reps===1)s.interval=6;
-    else s.interval=Math.round(s.interval*s.ease);
-    s.reps++;
-  }
-  s.ease=Math.max(1.3,s.ease+0.1-0.08*(3-quality)-0.02*(3-quality)*(3-quality));
-  s.due=Date.now()+s.interval*86400000;
-  fcSchedule[card.term]=s;
-  localStorage.setItem('psychlearn-fc',JSON.stringify(fcSchedule));
-}
-function getDueCards(){
-  const now=Date.now();
-  return glossaryData.filter(g=>{
-    const s=fcSchedule[g.term];
-    return !s||s.due<=now;
-  }).sort((a,b)=>{
-    const sa=fcSchedule[a.term],sb=fcSchedule[b.term];
-    if(!sa)return -1;if(!sb)return 1;
-    return sa.due-sb.due;
-  });
-}
-let fcCards=[],fcIdx=0,fcFlipped=false,fcMode='due';
+// Flashcard System — Grid view with edit/import/export
+let customCards=JSON.parse(localStorage.getItem('psychlearn-custom-cards')||'[]');
+let fcFilter='';
+function getAllCards(){return [...glossaryData,...customCards];}
+function saveCustomCards(){localStorage.setItem('psychlearn-custom-cards',JSON.stringify(customCards));}
+
 function initFlashcards(){
-  fcCards=fcMode==='all'?shuffle([...glossaryData]):getDueCards();
-  fcIdx=0;fcFlipped=false;
-  const due=getDueCards().length,learned=glossaryData.length-due;
-  document.getElementById('fc-stats').innerHTML=`<span class="fc-stat">📚 ${glossaryData.length} total</span><span class="fc-stat">✅ ${learned} learned</span><span class="fc-stat">📋 ${due} due</span><span class="fc-stat" style="cursor:pointer;border:1.5px solid var(--purple)" onclick="fcMode=fcMode==='due'?'all':'due';initFlashcards()">${fcMode==='due'?'📋 Due Only':'🔄 All Cards'}</span>`;
-  renderFlashcard();
-}
-function renderFlashcard(){
+  const all=getAllCards();
+  const filtered=fcFilter?all.filter(c=>c.term.toLowerCase().includes(fcFilter)||c.def.toLowerCase().includes(fcFilter)):all;
+  // Toolbar
+  document.getElementById('fc-toolbar').innerHTML=`
+    <input class="fc-search" placeholder="Search ${all.length} cards..." value="${fcFilter}" oninput="fcFilter=this.value.toLowerCase();initFlashcards()">
+    <button class="fc-toolbar-btn" onclick="showAddCard()">+ Add Card</button>
+    <button class="fc-toolbar-btn" onclick="exportCards()">📤 Export</button>
+    <button class="fc-toolbar-btn" onclick="document.getElementById('fc-import-file').click()">📥 Import</button>
+    <input type="file" id="fc-import-file" accept=".json,.csv,.txt" style="display:none" onchange="importCards(this)">
+  `;
+  // Stats
+  document.getElementById('fc-stats').innerHTML=`<span class="fc-stat">📚 ${all.length} total</span><span class="fc-stat">📖 ${glossaryData.length} built-in</span><span class="fc-stat">✏️ ${customCards.length} custom</span>`;
+  // Grid
   const c=document.getElementById('fc-container');
-  const limit=fcMode==='all'?fcCards.length:Math.min(fcCards.length,20);
-  if(fcIdx>=limit){
-    c.innerHTML=`<div style="text-align:center;padding:40px"><p style="font-size:1.5rem;margin-bottom:8px">🎉</p><p style="color:var(--muted)">${fcMode==='all'?'All cards reviewed!':'All due cards reviewed!'}</p><button class="done-btn" style="margin-top:16px;max-width:200px;display:inline-block" onclick="initFlashcards()">Study Again</button></div>`;
-    return;
-  }
-  fcFlipped=false;
-  const card=fcCards[fcIdx];
-  const fcLimit=fcMode==='all'?fcCards.length:Math.min(fcCards.length,20);
-  c.innerHTML=`<p style="text-align:center;font-size:0.8rem;color:var(--muted);margin-bottom:8px">${fcIdx+1} / ${fcLimit}</p>
-  <div class="fc-card" id="fc-card" onclick="flipCard()">
-    <div class="fc-inner">
-      <div class="fc-face fc-front">${card.term}</div>
-      <div class="fc-face fc-back">${card.def}</div>
+  if(filtered.length===0){c.innerHTML='<p style="text-align:center;color:var(--muted);padding:30px">No cards match your search.</p>';return;}
+  c.innerHTML='<div class="fc-grid">'+filtered.map((card,i)=>{
+    const isCustom=customCards.includes(card);
+    const idx=isCustom?customCards.indexOf(card):-1;
+    return `<div class="fc-item" onclick="this.querySelector('.fc-item-def').style.display=this.querySelector('.fc-item-def').style.display==='none'?'block':'none'">
+      <div class="fc-item-term">${card.term}</div>
+      <div class="fc-item-def" style="display:none">${card.def}</div>
+      ${isCustom?`<div class="fc-item-actions"><button class="fc-item-btn" onclick="event.stopPropagation();editCard(${idx})" title="Edit">✏️</button><button class="fc-item-btn" onclick="event.stopPropagation();deleteCard(${idx})" title="Delete">🗑️</button></div>`:''}
+    </div>`;
+  }).join('')+'</div>';
+}
+
+function showAddCard(term,def,editIdx){
+  const isEdit=editIdx!==undefined;
+  const modal=document.createElement('div');
+  modal.className='fc-modal';
+  modal.id='fc-modal';
+  modal.innerHTML=`<div class="fc-modal-box">
+    <div class="fc-modal-title">${isEdit?'Edit':'Add'} Flashcard</div>
+    <input class="fc-modal-input" id="fc-new-term" placeholder="Term / Question" value="${term||''}">
+    <textarea class="fc-modal-input" id="fc-new-def" placeholder="Definition / Answer" rows="3">${def||''}</textarea>
+    <div class="fc-modal-btns">
+      <button class="fc-modal-btn secondary" onclick="document.getElementById('fc-modal').remove()">Cancel</button>
+      <button class="fc-modal-btn primary" onclick="${isEdit?`saveEditCard(${editIdx})`:'addCard()'}">${isEdit?'Save':'Add'}</button>
     </div>
-  </div>
-  <p style="text-align:center;font-size:0.78rem;color:var(--muted);margin-bottom:12px">Tap card to flip</p>
-  <div class="fc-controls" id="fc-controls" style="display:none">
-    <button class="fc-btn again" onclick="rateCard(0)">Again</button>
-    <button class="fc-btn hard" onclick="rateCard(1)">Hard</button>
-    <button class="fc-btn good" onclick="rateCard(2)">Good</button>
-    <button class="fc-btn easy" onclick="rateCard(3)">Easy</button>
   </div>`;
+  document.body.appendChild(modal);
+  document.getElementById('fc-new-term').focus();
 }
-function flipCard(){
-  if(fcFlipped)return;fcFlipped=true;
-  document.getElementById('fc-card').classList.add('flipped');
-  document.getElementById('fc-controls').style.display='flex';
+function addCard(){
+  const term=document.getElementById('fc-new-term').value.trim();
+  const def=document.getElementById('fc-new-def').value.trim();
+  if(!term||!def)return;
+  customCards.push({term,def});
+  saveCustomCards();
+  document.getElementById('fc-modal').remove();
+  initFlashcards();
 }
-function rateCard(q){
-  sm2(fcCards[fcIdx],q);fcIdx++;renderFlashcard();
+function editCard(idx){
+  const card=customCards[idx];
+  showAddCard(card.term,card.def,idx);
+}
+function saveEditCard(idx){
+  const term=document.getElementById('fc-new-term').value.trim();
+  const def=document.getElementById('fc-new-def').value.trim();
+  if(!term||!def)return;
+  customCards[idx]={term,def};
+  saveCustomCards();
+  document.getElementById('fc-modal').remove();
+  initFlashcards();
+}
+function deleteCard(idx){
+  if(!confirm('Delete this card?'))return;
+  customCards.splice(idx,1);
+  saveCustomCards();
+  initFlashcards();
+}
+function exportCards(){
+  const all=getAllCards();
+  const data=JSON.stringify(all,null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='psychlearn-flashcards.json';a.click();
+  URL.revokeObjectURL(url);
+}
+function importCards(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const text=e.target.result;
+      let cards;
+      if(file.name.endsWith('.json')){
+        cards=JSON.parse(text);
+      }else{
+        // CSV or TXT: expect "term,definition" or "term\tdefinition" per line
+        cards=text.split('\n').filter(l=>l.trim()).map(l=>{
+          const sep=l.includes('\t')?'\t':',';
+          const parts=l.split(sep);
+          return {term:parts[0]?.trim()||'',def:parts.slice(1).join(sep).trim()||''};
+        }).filter(c=>c.term&&c.def);
+      }
+      if(!Array.isArray(cards)||cards.length===0){alert('No valid cards found.');return;}
+      const newCards=cards.filter(c=>c.term&&c.def);
+      customCards.push(...newCards);
+      saveCustomCards();
+      alert('Imported '+newCards.length+' cards!');
+      initFlashcards();
+    }catch(err){alert('Error reading file: '+err.message);}
+  };
+  reader.readAsText(file);
+  input.value='';
 }
 
 // Glossary
