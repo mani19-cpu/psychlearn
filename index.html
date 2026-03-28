@@ -291,6 +291,19 @@
   }
   .done-btn:hover { background: #6347a8; transform: translateY(-1px); }
 
+  .video-section { margin: 28px 0; padding: 20px; background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); }
+  .video-section h3 { font-size: 1rem; color: var(--purple); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .video-card { background: var(--bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
+  .video-card:hover { transform: translateY(-2px); border-color: var(--purple); }
+  .video-thumb { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
+  .video-thumb img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+  .video-thumb .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 48px; height: 48px; background: rgba(155,125,224,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .video-thumb .play-icon::after { content: ''; border-left: 16px solid white; border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 3px; }
+  .video-info { padding: 10px 12px; }
+  .video-info .video-title { font-size: 0.82rem; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 4px; }
+  .video-info .video-channel { font-size: 0.72rem; color: var(--muted); }
+
   /* DEEP DIVE */
   .deep-dive-btn {
     background: none;
@@ -7113,7 +7126,8 @@ function openLesson(u,name,sub){
     const eTerm=term.replace(/'/g,"&#39;");
     return `<span class="vocab-pill kw-clickable" data-term="${eTerm}" data-def="${eDef}">${term}</span>`;
   });
-  document.getElementById('lesson-content').innerHTML=`<div class="lesson-header"><h1>${name}</h1><p>Unit ${u} — ${sub}</p></div>${content}<button class="deep-dive-btn" id="dd-btn" onclick="toggleDeepDive('${safeName}','${sub.replace(/'/g,"\\'")}')">🔬 Deep Dive — Go Deeper</button><div id="deep-dive-area"></div><button class="done-btn" onclick="markDone(${u},'${safeName}')">✓ Mark as Complete</button>`;
+  const videoHTML=buildVideoSection(name);
+  document.getElementById('lesson-content').innerHTML=`<div class="lesson-header"><h1>${name}</h1><p>Unit ${u} — ${sub}</p></div>${content}<button class="deep-dive-btn" id="dd-btn" onclick="toggleDeepDive('${safeName}','${sub.replace(/'/g,"\\'")}')">🔬 Deep Dive — Go Deeper</button><div id="deep-dive-area"></div>${videoHTML}<button class="done-btn" onclick="markDone(${u},'${safeName}')">✓ Mark as Complete</button>`;
   // Insert diagram if available
   const diagram=getDiagram(name);
   if(diagram){
@@ -9907,6 +9921,123 @@ const DD={
 <div class="example-box"><strong>🔗 The incubation effect in practice:</strong> Stuck on a problem? Take a walk, do something unrelated, or sleep on it. Research consistently shows that periods of incubation improve creative problem-solving — the unconscious mind continues processing the problem using associative networks that conscious, focused thinking cannot access. This is not laziness — it is how the creative brain works.</div>`
 };
 
+// Video Links
+function buildVideoSection(name){
+const V={
+"What Is Psychology?":[{id:"vo4pMVb0R6M",t:"Intro to Psychology",c:"Crash Course"},{id:"wuhJ-GkRRQc",t:"What is Psychology?",c:"Crash Course"}],
+"History of Psychology":[{id:"wuhJ-GkRRQc",t:"Intro to Psychology",c:"Crash Course"},{id:"vo4pMVb0R6M",t:"Psychological Research",c:"Crash Course"}],
+"Modern Perspectives":[{id:"vo4pMVb0R6M",t:"Intro to Psychology",c:"Crash Course"},{id:"wuhJ-GkRRQc",t:"What is Psychology?",c:"Crash Course"}],
+"Research Methods":[{id:"hFV71QPvX2I",t:"Research & Experimentation",c:"Crash Course"},{id:"GUpd2HJHUt8",t:"Psychological Research",c:"Crash Course"}],
+"Ethics in Research":[{id:"BuijLw2P0cA",t:"Bioethics",c:"Crash Course"},{id:"hFV71QPvX2I",t:"Research & Experimentation",c:"Crash Course"}],
+"Subfields":[{id:"vo4pMVb0R6M",t:"Intro to Psychology",c:"Crash Course"}],
+"The Neuron":[{id:"qPix_X-9t7E",t:"The Neuron",c:"Crash Course"},{id:"ob5U8zPbAX4",t:"How Neurons Communicate",c:"Crash Course"}],
+"Neural Communication":[{id:"ob5U8zPbAX4",t:"The Chemical Mind",c:"Crash Course"},{id:"qPix_X-9t7E",t:"The Neuron",c:"Crash Course"}],
+"Key Neurotransmitters":[{id:"ob5U8zPbAX4",t:"The Chemical Mind",c:"Crash Course"}],
+"The Nervous System":[{id:"qPix_X-9t7E",t:"The Neuron",c:"Crash Course"},{id:"ob5U8zPbAX4",t:"The Chemical Mind",c:"Crash Course"}],
+"Brain Structure":[{id:"vHrmiy4W9C0",t:"The Brain",c:"Crash Course"},{id:"kMKc8nfPATI",t:"Parts of the Brain",c:"Crash Course"}],
+"Brain Lateralization":[{id:"vHrmiy4W9C0",t:"The Brain",c:"Crash Course"}],
+"Endocrine System":[{id:"ob5U8zPbAX4",t:"The Chemical Mind",c:"Crash Course"},{id:"eQBOkAJM5Zo",t:"Endocrine System",c:"Crash Course A&P"}],
+"Brain Plasticity & Imaging":[{id:"vHrmiy4W9C0",t:"The Brain",c:"Crash Course"},{id:"kMKc8nfPATI",t:"Brain Imaging",c:"Crash Course"}],
+"Sensation vs Perception":[{id:"unWnZvXJH2o",t:"Sensation & Perception",c:"Crash Course"},{id:"n46umYA_4dM",t:"Perception",c:"Crash Course"}],
+"Thresholds & Sensitivity":[{id:"unWnZvXJH2o",t:"Sensation & Perception",c:"Crash Course"}],
+"Vision":[{id:"o0DYP-u1i80",t:"Vision",c:"Crash Course"},{id:"unWnZvXJH2o",t:"Sensation & Perception",c:"Crash Course"}],
+"Hearing":[{id:"n46umYA_4dM",t:"Hearing & Balance",c:"Crash Course"}],
+"Other Senses":[{id:"n46umYA_4dM",t:"The Other Senses",c:"Crash Course"}],
+"Perceptual Organization":[{id:"n46umYA_4dM",t:"Perception",c:"Crash Course"}],
+"Depth Perception":[{id:"n46umYA_4dM",t:"Perception",c:"Crash Course"}],
+"Constancies & Illusions":[{id:"n46umYA_4dM",t:"Perception",c:"Crash Course"}],
+"Attention":[{id:"n46umYA_4dM",t:"Perception",c:"Crash Course"}],
+"What Is Learning?":[{id:"qG2SwE_6uVM",t:"How We Learn",c:"Crash Course"},{id:"H6LEcM0E0io",t:"Learning",c:"Khan Academy"}],
+"Classical Conditioning":[{id:"qG2SwE_6uVM",t:"Classical Conditioning",c:"Crash Course"},{id:"H6LEcM0E0io",t:"Pavlov and Classical Conditioning",c:"Khan Academy"}],
+"Operant Conditioning":[{id:"ne6o-TGoqMo",t:"Operant Conditioning",c:"Crash Course"},{id:"fanm--WyQJo",t:"Operant Conditioning",c:"Khan Academy"}],
+"Comparing CC & OC":[{id:"qG2SwE_6uVM",t:"Classical Conditioning",c:"Crash Course"},{id:"ne6o-TGoqMo",t:"Operant Conditioning",c:"Crash Course"}],
+"Observational Learning":[{id:"128Ts5r9NRE",t:"Social Thinking",c:"Crash Course"},{id:"ne6o-TGoqMo",t:"Operant Conditioning",c:"Crash Course"}],
+"Cognitive Influences":[{id:"ne6o-TGoqMo",t:"Operant Conditioning",c:"Crash Course"}],
+"Nature of Memory":[{id:"bSycdIx-C48",t:"How We Make Memories",c:"Crash Course"},{id:"HVWbrNls-Kw",t:"Memory",c:"Khan Academy"}],
+"Encoding":[{id:"bSycdIx-C48",t:"How We Make Memories",c:"Crash Course"}],
+"Storage":[{id:"bSycdIx-C48",t:"How We Make Memories",c:"Crash Course"}],
+"Retrieval":[{id:"bSycdIx-C48",t:"Remembering & Forgetting",c:"Crash Course"}],
+"Forgetting":[{id:"HVWbrNls-Kw",t:"Forgetting & Memory Distortion",c:"Crash Course"}],
+"Memory Distortion":[{id:"HVWbrNls-Kw",t:"Memory Distortion",c:"Crash Course"}],
+"Thinking & Problem-Solving":[{id:"r_fhEg5BUGY",t:"Thinking!",c:"Crash Course"},{id:"m2eyq9qTOQY",t:"Problem Solving",c:"Crash Course"}],
+"Intro to Development":[{id:"8nz2dtE1OCI",t:"Intro to Development",c:"Crash Course"}],
+"Prenatal Development":[{id:"8nz2dtE1OCI",t:"Intro to Development",c:"Crash Course"}],
+"Infancy & Childhood":[{id:"phCO0VNJq4w",t:"Piaget's Stages of Development",c:"Crash Course"},{id:"8nz2dtE1OCI",t:"Intro to Development",c:"Crash Course"}],
+"Social & Emotional":[{id:"8nz2dtE1OCI",t:"Intro to Development",c:"Crash Course"},{id:"2W_wMBDAIFI",t:"Attachment Theory",c:"Sprouts"}],
+"Adolescence":[{id:"PzyXGUCngoU",t:"Adolescence",c:"Crash Course"},{id:"phCO0VNJq4w",t:"Development",c:"Crash Course"}],
+"Adulthood & Aging":[{id:"PzyXGUCngoU",t:"Aging",c:"Crash Course"}],
+"What Is Personality?":[{id:"YwBknlFCos0",t:"Personality",c:"Crash Course"},{id:"7wPJmMUz2aw",t:"Personality Theories",c:"Khan Academy"}],
+"Psychoanalytic Perspective":[{id:"YwBknlFCos0",t:"Freud & Psychoanalysis",c:"Crash Course"},{id:"7wPJmMUz2aw",t:"Personality Theories",c:"Khan Academy"}],
+"Humanistic Perspective":[{id:"G2y8Sx4B2Sk",t:"Humanistic Psychology",c:"Crash Course"}],
+"Trait Perspective":[{id:"sUrV6oZ3zsk",t:"Measuring Personality",c:"Crash Course"}],
+"Social-Cognitive":[{id:"sUrV6oZ3zsk",t:"Measuring Personality",c:"Crash Course"}],
+"Personality Assessment":[{id:"sUrV6oZ3zsk",t:"Measuring Personality",c:"Crash Course"}],
+"What Is Social Psych?":[{id:"UGxGDdQnC1Y",t:"Social Thinking",c:"Crash Course"},{id:"128Ts5r9NRE",t:"Social Influence",c:"Crash Course"}],
+"Social Thinking":[{id:"UGxGDdQnC1Y",t:"Social Thinking",c:"Crash Course"}],
+"Social Influence":[{id:"128Ts5r9NRE",t:"Social Influence",c:"Crash Course"},{id:"UGxGDdQnC1Y",t:"Social Thinking",c:"Crash Course"}],
+"Prejudice & Discrimination":[{id:"7P0iP2Zm6a4",t:"Prejudice & Discrimination",c:"Crash Course"}],
+"Aggression":[{id:"7P0iP2Zm6a4",t:"Aggression vs Altruism",c:"Crash Course"}],
+"Attraction & Relationships":[{id:"128Ts5r9NRE",t:"Social Influence",c:"Crash Course"}],
+"Prosocial Behavior":[{id:"7P0iP2Zm6a4",t:"Aggression vs Altruism",c:"Crash Course"}],
+"Defining Abnormal":[{id:"wuhJ-GkRRQc",t:"Psychological Disorders",c:"Crash Course"},{id:"uxqCsplYNtE",t:"What Is a Disorder?",c:"Khan Academy"}],
+"The DSM":[{id:"wuhJ-GkRRQc",t:"Psychological Disorders",c:"Crash Course"}],
+"Anxiety Disorders":[{id:"aX7jnVXXG5o",t:"OCD & Anxiety",c:"Crash Course"},{id:"uxqCsplYNtE",t:"Anxiety Disorders",c:"Khan Academy"}],
+"OCD & Related":[{id:"aX7jnVXXG5o",t:"OCD & Anxiety Disorders",c:"Crash Course"}],
+"Depressive Disorders":[{id:"ZwMlHkWKDwM",t:"Depressive & Bipolar",c:"Crash Course"},{id:"LnS0PfNyj4U",t:"Depression",c:"Khan Academy"}],
+"Bipolar Disorder":[{id:"ZwMlHkWKDwM",t:"Depressive & Bipolar",c:"Crash Course"}],
+"Schizophrenia":[{id:"uxqCsplYNtE",t:"Schizophrenia & Dissociative",c:"Crash Course"}],
+"Dissociative Disorders":[{id:"uxqCsplYNtE",t:"Schizophrenia & Dissociative",c:"Crash Course"}],
+"Personality Disorders":[{id:"4E1JiDFxFGk",t:"Personality Disorders",c:"Crash Course"}],
+"Overview of Treatment":[{id:"6nEL44QkL9w",t:"Getting Help",c:"Crash Course"},{id:"qWixcpE0UKg",t:"Therapy",c:"Khan Academy"}],
+"Psychodynamic Therapies":[{id:"6nEL44QkL9w",t:"Getting Help: Psychotherapy",c:"Crash Course"}],
+"Humanistic Therapies":[{id:"6nEL44QkL9w",t:"Getting Help: Psychotherapy",c:"Crash Course"}],
+"Behavioral Therapies":[{id:"6nEL44QkL9w",t:"Getting Help: Psychotherapy",c:"Crash Course"}],
+"Cognitive Therapies":[{id:"6nEL44QkL9w",t:"Getting Help: Psychotherapy",c:"Crash Course"}],
+"CBT":[{id:"6nEL44QkL9w",t:"Getting Help: Psychotherapy",c:"Crash Course"},{id:"qWixcpE0UKg",t:"CBT Explained",c:"Khan Academy"}],
+"Group & Family":[{id:"6nEL44QkL9w",t:"Getting Help: Psychotherapy",c:"Crash Course"}],
+"Biomedical Therapies":[{id:"MBGvKGGOjkE",t:"Biomedical Treatments",c:"Crash Course"}],
+"Evaluating Therapies":[{id:"MBGvKGGOjkE",t:"Biomedical Treatments",c:"Crash Course"}],
+"Prevention & Well-Being":[{id:"MBGvKGGOjkE",t:"Biomedical Treatments",c:"Crash Course"}],
+"What Is Consciousness?":[{id:"jReX7qoS2bA",t:"Consciousness",c:"Crash Course"},{id:"Mr_a5rHL23s",t:"What Is Consciousness?",c:"Kurzgesagt"}],
+"Sleep & Sleep Stages":[{id:"rMHus-0wFSo",t:"To Sleep, Perchance to Dream",c:"Crash Course"}],
+"Why We Sleep":[{id:"rMHus-0wFSo",t:"To Sleep, Perchance to Dream",c:"Crash Course"},{id:"gedoSfZvBgE",t:"Why Do We Sleep?",c:"TED-Ed"}],
+"Dreams":[{id:"rMHus-0wFSo",t:"To Sleep, Perchance to Dream",c:"Crash Course"},{id:"2W85Dwxx218",t:"Why Do We Dream?",c:"TED-Ed"}],
+"Sleep Disorders":[{id:"rMHus-0wFSo",t:"To Sleep, Perchance to Dream",c:"Crash Course"}],
+"Psychoactive Drugs":[{id:"W_A-hG5xpqQ",t:"Altered States",c:"Crash Course"}],
+"Depressants & Opioids":[{id:"W_A-hG5xpqQ",t:"Altered States",c:"Crash Course"}],
+"Stimulants & Hallucinogens":[{id:"W_A-hG5xpqQ",t:"Altered States",c:"Crash Course"}],
+"Hypnosis & Meditation":[{id:"jReX7qoS2bA",t:"Consciousness",c:"Crash Course"}],
+"Theories of Emotion":[{id:"gAMbkJk6gnE",t:"Feeling All the Feels",c:"Crash Course"},{id:"dLT1GKzKhSg",t:"Theories of Emotion",c:"Khan Academy"}],
+"The Biology of Emotion":[{id:"gAMbkJk6gnE",t:"Feeling All the Feels",c:"Crash Course"}],
+"Stress & Emotion":[{id:"hovBP64oEUk",t:"Stress & Health",c:"Crash Course"}],
+"Expressing Emotion":[{id:"gAMbkJk6gnE",t:"Feeling All the Feels",c:"Crash Course"}],
+"What Is Motivation?":[{id:"o2JhvB0O5RE",t:"Motivation",c:"Crash Course"},{id:"gAMbkJk6gnE",t:"Emotion & Motivation",c:"Crash Course"}],
+"Hunger & Eating":[{id:"o2JhvB0O5RE",t:"Motivation: Hunger & Sex",c:"Crash Course"}],
+"Sexual Motivation":[{id:"o2JhvB0O5RE",t:"Motivation: Hunger & Sex",c:"Crash Course"}],
+"Achievement Motivation":[{id:"o2JhvB0O5RE",t:"Motivation",c:"Crash Course"}],
+"Maslow & Beyond":[{id:"o2JhvB0O5RE",t:"Motivation",c:"Crash Course"},{id:"G2y8Sx4B2Sk",t:"Humanistic Psychology",c:"Crash Course"}],
+"What Is Intelligence?":[{id:"9xTz3QjajQs",t:"Controversy of Intelligence",c:"Crash Course"}],
+"Measuring Intelligence":[{id:"9xTz3QjajQs",t:"Controversy of Intelligence",c:"Crash Course"}],
+"Theories of Intelligence":[{id:"9xTz3QjajQs",t:"Controversy of Intelligence",c:"Crash Course"}],
+"Extremes of Intelligence":[{id:"9xTz3QjajQs",t:"Controversy of Intelligence",c:"Crash Course"}],
+"Nature, Nurture & IQ":[{id:"9xTz3QjajQs",t:"Controversy of Intelligence",c:"Crash Course"}],
+"Bias in Testing":[{id:"9xTz3QjajQs",t:"Controversy of Intelligence",c:"Crash Course"},{id:"75g4d5sF3xI",t:"Bias in Testing",c:"Khan Academy"}],
+"Creativity":[{id:"r_fhEg5BUGY",t:"Thinking!",c:"Crash Course"}],
+"What Is Stress?":[{id:"hovBP64oEUk",t:"Stress & Health",c:"Crash Course"}],
+"Stress & the Body":[{id:"hovBP64oEUk",t:"Stress & Health",c:"Crash Course"}],
+"Stress & Illness":[{id:"hovBP64oEUk",t:"Stress & Health",c:"Crash Course"}],
+"Coping Strategies":[{id:"hovBP64oEUk",t:"Stress & Health",c:"Crash Course"}],
+"Resilience & Hardiness":[{id:"hovBP64oEUk",t:"Stress & Health",c:"Crash Course"}],
+"Health Behaviours":[{id:"hovBP64oEUk",t:"Stress & Health",c:"Crash Course"}],
+"Substance Use & Health":[{id:"W_A-hG5xpqQ",t:"Altered States",c:"Crash Course"},{id:"hovBP64oEUk",t:"Stress & Health",c:"Crash Course"}],
+"Positive Health Psychology":[{id:"hovBP64oEUk",t:"Stress & Health",c:"Crash Course"},{id:"G2y8Sx4B2Sk",t:"Humanistic Psychology",c:"Crash Course"}]
+};
+const vids=V[name];
+if(!vids||vids.length===0) return '';
+let cards=vids.map(v=>`<a class="video-card" href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener"><div class="video-thumb"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="${v.t}" loading="lazy"><div class="play-icon"></div></div><div class="video-info"><div class="video-title">${v.t}</div><div class="video-channel">${v.c}</div></div></a>`).join('');
+return `<div class="video-section"><h3>🎬 Watch & Learn</h3><div class="video-grid">${cards}</div></div>`;
+}
+
 // Interactive Diagrams
 function getDiagram(name){
 const diagrams={
@@ -10258,7 +10389,301 @@ const diagrams={
 <path d="M200,100 Q230,80 210,115" stroke="#e07d9b" stroke-width="1.5" fill="none" stroke-dasharray="3,3"/>
 <text x="190" y="95" fill="#e07d9b" font-size="8" font-weight="700">Reuptake</text>
 </svg>
-<div class="diagram-label">Neurotransmitter release across the synaptic cleft to receptor sites</div>`
+<div class="diagram-label">Neurotransmitter release across the synaptic cleft to receptor sites</div>`,
+
+"Classical Conditioning":`<svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg" style="background:#1e1830;font-family:sans-serif">
+<text x="300" y="22" text-anchor="middle" fill="#9b7de0" font-size="14" font-weight="800">CLASSICAL CONDITIONING</text>
+<!-- Before Conditioning -->
+<text x="150" y="55" text-anchor="middle" fill="#f5c842" font-size="11" font-weight="700">BEFORE CONDITIONING</text>
+<rect x="20" y="65" width="120" height="35" rx="8" fill="#2e2a1a" stroke="#f5c842" stroke-width="1.5"/>
+<text x="80" y="87" text-anchor="middle" fill="#f5c842" font-size="10" font-weight="600">Food (UCS)</text>
+<text x="160" y="87" fill="#b0a8c8" font-size="14">→</text>
+<rect x="175" y="65" width="120" height="35" rx="8" fill="#1a2e1a" stroke="#4ade80" stroke-width="1.5"/>
+<text x="235" y="87" text-anchor="middle" fill="#4ade80" font-size="10" font-weight="600">Salivation (UCR)</text>
+<rect x="20" y="110" width="120" height="35" rx="8" fill="#1e2a3d" stroke="#6aa3e8" stroke-width="1.5"/>
+<text x="80" y="132" text-anchor="middle" fill="#6aa3e8" font-size="10" font-weight="600">Bell (NS)</text>
+<text x="160" y="132" fill="#b0a8c8" font-size="14">→</text>
+<text x="235" y="132" text-anchor="middle" fill="#b0a8c8" font-size="10">No response</text>
+<!-- During Conditioning -->
+<text x="450" y="55" text-anchor="middle" fill="#f5c842" font-size="11" font-weight="700">DURING CONDITIONING</text>
+<rect x="350" y="65" width="80" height="35" rx="8" fill="#1e2a3d" stroke="#6aa3e8" stroke-width="1.5"/>
+<text x="390" y="87" text-anchor="middle" fill="#6aa3e8" font-size="10" font-weight="600">Bell</text>
+<text x="438" y="87" fill="#b0a8c8" font-size="10">+</text>
+<rect x="450" y="65" width="80" height="35" rx="8" fill="#2e2a1a" stroke="#f5c842" stroke-width="1.5"/>
+<text x="490" y="87" text-anchor="middle" fill="#f5c842" font-size="10" font-weight="600">Food</text>
+<text x="545" y="87" fill="#b0a8c8" font-size="14">→</text>
+<text x="575" y="87" text-anchor="middle" fill="#4ade80" font-size="9" font-weight="600">Salivation</text>
+<text x="450" y="120" text-anchor="middle" fill="#b0a8c8" font-size="9" font-style="italic">Repeated pairings</text>
+<!-- After Conditioning -->
+<text x="300" y="170" text-anchor="middle" fill="#9b7de0" font-size="11" font-weight="700">AFTER CONDITIONING</text>
+<rect x="150" y="185" width="120" height="40" rx="8" fill="#2e1a3d" stroke="#9b7de0" stroke-width="2"/>
+<text x="210" y="210" text-anchor="middle" fill="#9b7de0" font-size="11" font-weight="700">Bell (CS)</text>
+<path d="M275,205 L320,205" stroke="#9b7de0" stroke-width="2" marker-end="url(#arrowP)"/>
+<rect x="325" y="185" width="140" height="40" rx="8" fill="#1a2e1a" stroke="#4ade80" stroke-width="2"/>
+<text x="395" y="210" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="700">Salivation (CR)</text>
+<defs><marker id="arrowP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9b7de0"/></marker></defs>
+<text x="300" y="250" text-anchor="middle" fill="#b0a8c8" font-size="9" font-style="italic">The bell alone now triggers salivation</text>
+<text x="300" y="270" text-anchor="middle" fill="#b0a8c8" font-size="8">UCS = Unconditioned Stimulus | UCR = Unconditioned Response | CS = Conditioned Stimulus | CR = Conditioned Response</text>
+</svg>
+<div class="diagram-label">Pavlov's classical conditioning: before, during, and after conditioning</div>`,
+
+"Theories of Emotion":`<svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg" style="background:#1e1830;font-family:sans-serif">
+<text x="300" y="22" text-anchor="middle" fill="#9b7de0" font-size="14" font-weight="800">THEORIES OF EMOTION</text>
+<!-- James-Lange -->
+<text x="20" y="55" fill="#f5c842" font-size="10" font-weight="700">JAMES-LANGE</text>
+<rect x="20" y="62" width="70" height="30" rx="6" fill="#2e2a1a" stroke="#f5c842" stroke-width="1"/>
+<text x="55" y="81" text-anchor="middle" fill="#f5c842" font-size="8" font-weight="600">Stimulus</text>
+<text x="100" y="81" fill="#b0a8c8" font-size="12">→</text>
+<rect x="112" y="62" width="90" height="30" rx="6" fill="#2e1a1a" stroke="#e05a5a" stroke-width="1"/>
+<text x="157" y="81" text-anchor="middle" fill="#e05a5a" font-size="8" font-weight="600">Body response</text>
+<text x="212" y="81" fill="#b0a8c8" font-size="12">→</text>
+<rect x="224" y="62" width="70" height="30" rx="6" fill="#1a2e1a" stroke="#4ade80" stroke-width="1"/>
+<text x="259" y="81" text-anchor="middle" fill="#4ade80" font-size="8" font-weight="600">Emotion</text>
+<!-- Cannon-Bard -->
+<text x="20" y="115" fill="#6aa3e8" font-size="10" font-weight="700">CANNON-BARD</text>
+<rect x="20" y="122" width="70" height="30" rx="6" fill="#2e2a1a" stroke="#f5c842" stroke-width="1"/>
+<text x="55" y="141" text-anchor="middle" fill="#f5c842" font-size="8" font-weight="600">Stimulus</text>
+<line x1="95" y1="130" x2="140" y2="130" stroke="#b0a8c8" stroke-width="1"/>
+<line x1="95" y1="145" x2="140" y2="145" stroke="#b0a8c8" stroke-width="1"/>
+<text x="100" y="128" fill="#b0a8c8" font-size="8">→</text>
+<text x="100" y="148" fill="#b0a8c8" font-size="8">→</text>
+<rect x="145" y="118" width="90" height="18" rx="4" fill="#2e1a1a" stroke="#e05a5a" stroke-width="1"/>
+<text x="190" y="131" text-anchor="middle" fill="#e05a5a" font-size="7" font-weight="600">Body response</text>
+<rect x="145" y="140" width="90" height="18" rx="4" fill="#1a2e1a" stroke="#4ade80" stroke-width="1"/>
+<text x="190" y="153" text-anchor="middle" fill="#4ade80" font-size="7" font-weight="600">Emotion felt</text>
+<text x="260" y="141" text-anchor="middle" fill="#b0a8c8" font-size="7" font-style="italic">simultaneous</text>
+<!-- Schachter-Singer -->
+<text x="20" y="185" fill="#9b7de0" font-size="10" font-weight="700">SCHACHTER-SINGER</text>
+<rect x="20" y="192" width="70" height="30" rx="6" fill="#2e2a1a" stroke="#f5c842" stroke-width="1"/>
+<text x="55" y="211" text-anchor="middle" fill="#f5c842" font-size="8" font-weight="600">Stimulus</text>
+<text x="100" y="211" fill="#b0a8c8" font-size="12">→</text>
+<rect x="112" y="192" width="90" height="30" rx="6" fill="#2e1a1a" stroke="#e05a5a" stroke-width="1"/>
+<text x="157" y="211" text-anchor="middle" fill="#e05a5a" font-size="8" font-weight="600">Arousal</text>
+<text x="212" y="211" fill="#b0a8c8" font-size="12">→</text>
+<rect x="224" y="192" width="90" height="30" rx="6" fill="#2e1a3d" stroke="#9b7de0" stroke-width="1"/>
+<text x="269" y="207" text-anchor="middle" fill="#9b7de0" font-size="7" font-weight="600">Cognitive</text>
+<text x="269" y="217" text-anchor="middle" fill="#9b7de0" font-size="7" font-weight="600">label</text>
+<text x="324" y="211" fill="#b0a8c8" font-size="12">→</text>
+<rect x="336" y="192" width="70" height="30" rx="6" fill="#1a2e1a" stroke="#4ade80" stroke-width="1"/>
+<text x="371" y="211" text-anchor="middle" fill="#4ade80" font-size="8" font-weight="600">Emotion</text>
+<!-- Lazarus -->
+<text x="20" y="255" fill="#e0a07d" font-size="10" font-weight="700">LAZARUS</text>
+<rect x="20" y="262" width="70" height="30" rx="6" fill="#2e2a1a" stroke="#f5c842" stroke-width="1"/>
+<text x="55" y="281" text-anchor="middle" fill="#f5c842" font-size="8" font-weight="600">Stimulus</text>
+<text x="100" y="281" fill="#b0a8c8" font-size="12">→</text>
+<rect x="112" y="262" width="90" height="30" rx="6" fill="#2e1a3d" stroke="#e0a07d" stroke-width="1"/>
+<text x="157" y="281" text-anchor="middle" fill="#e0a07d" font-size="8" font-weight="600">Appraisal</text>
+<text x="212" y="281" fill="#b0a8c8" font-size="12">→</text>
+<rect x="224" y="262" width="85" height="30" rx="6" fill="#1a2e1a" stroke="#4ade80" stroke-width="1"/>
+<text x="267" y="277" text-anchor="middle" fill="#4ade80" font-size="7" font-weight="600">Emotion +</text>
+<text x="267" y="287" text-anchor="middle" fill="#4ade80" font-size="7" font-weight="600">body response</text>
+</svg>
+<div class="diagram-label">Four major theories of how emotions arise</div>`,
+
+"Sleep & Sleep Stages":`<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="background:#1e1830;font-family:sans-serif">
+<text x="300" y="20" text-anchor="middle" fill="#9b7de0" font-size="14" font-weight="800">SLEEP CYCLE ARCHITECTURE</text>
+<!-- Y axis labels -->
+<text x="15" y="52" fill="#b0a8c8" font-size="8" font-weight="600">Awake</text>
+<text x="15" y="77" fill="#6aa3e8" font-size="8" font-weight="600">REM</text>
+<text x="15" y="102" fill="#b0a8c8" font-size="8" font-weight="600">N1</text>
+<text x="15" y="127" fill="#b0a8c8" font-size="8" font-weight="600">N2</text>
+<text x="15" y="162" fill="#9b7de0" font-size="8" font-weight="600">N3/SWS</text>
+<!-- Grid lines -->
+<line x1="50" y1="45" x2="580" y2="45" stroke="#3d3458" stroke-width="0.5" stroke-dasharray="3,3"/>
+<line x1="50" y1="70" x2="580" y2="70" stroke="#3d3458" stroke-width="0.5" stroke-dasharray="3,3"/>
+<line x1="50" y1="95" x2="580" y2="95" stroke="#3d3458" stroke-width="0.5" stroke-dasharray="3,3"/>
+<line x1="50" y1="120" x2="580" y2="120" stroke="#3d3458" stroke-width="0.5" stroke-dasharray="3,3"/>
+<line x1="50" y1="155" x2="580" y2="155" stroke="#3d3458" stroke-width="0.5" stroke-dasharray="3,3"/>
+<!-- Sleep cycle path -->
+<polyline points="50,45 65,95 80,120 110,155 140,120 160,70 180,95 200,120 240,155 260,120 275,70 300,95 320,120 345,140 360,120 380,70 410,95 425,120 440,130 455,120 475,70 520,70 540,95 555,70 570,45" fill="none" stroke="#9b7de0" stroke-width="2.5"/>
+<!-- REM period highlights -->
+<rect x="155" y="65" width="25" height="15" rx="3" fill="rgba(106,163,232,0.3)" stroke="#6aa3e8" stroke-width="1"/>
+<rect x="270" y="65" width="35" height="15" rx="3" fill="rgba(106,163,232,0.3)" stroke="#6aa3e8" stroke-width="1"/>
+<rect x="375" y="65" width="40" height="15" rx="3" fill="rgba(106,163,232,0.3)" stroke="#6aa3e8" stroke-width="1"/>
+<rect x="470" y="65" width="55" height="15" rx="3" fill="rgba(106,163,232,0.3)" stroke="#6aa3e8" stroke-width="1"/>
+<rect x="550" y="65" width="25" height="15" rx="3" fill="rgba(106,163,232,0.3)" stroke="#6aa3e8" stroke-width="1"/>
+<!-- Cycle labels -->
+<text x="110" y="185" text-anchor="middle" fill="#b0a8c8" font-size="8" font-weight="600">Cycle 1</text>
+<text x="220" y="185" text-anchor="middle" fill="#b0a8c8" font-size="8" font-weight="600">Cycle 2</text>
+<text x="340" y="185" text-anchor="middle" fill="#b0a8c8" font-size="8" font-weight="600">Cycle 3</text>
+<text x="450" y="185" text-anchor="middle" fill="#b0a8c8" font-size="8" font-weight="600">Cycle 4</text>
+<text x="540" y="185" text-anchor="middle" fill="#b0a8c8" font-size="8" font-weight="600">Cycle 5</text>
+<!-- Time axis -->
+<text x="50" y="205" fill="#b0a8c8" font-size="8">11pm</text>
+<text x="180" y="205" fill="#b0a8c8" font-size="8">1am</text>
+<text x="310" y="205" fill="#b0a8c8" font-size="8">3am</text>
+<text x="440" y="205" fill="#b0a8c8" font-size="8">5am</text>
+<text x="560" y="205" fill="#b0a8c8" font-size="8">7am</text>
+<!-- Legend -->
+<rect x="380" y="30" width="12" height="8" rx="2" fill="rgba(106,163,232,0.3)" stroke="#6aa3e8" stroke-width="1"/>
+<text x="396" y="38" fill="#6aa3e8" font-size="7" font-weight="600">REM (dreams)</text>
+<text x="300" y="215" text-anchor="middle" fill="#b0a8c8" font-size="7" font-style="italic">REM periods lengthen; SWS deepens in first half of night</text>
+</svg>
+<div class="diagram-label">Typical night's sleep showing 90-minute cycles and increasing REM periods</div>`,
+
+"Erikson's Stages":`<svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg" style="background:#1e1830;font-family:sans-serif">
+<text x="300" y="22" text-anchor="middle" fill="#9b7de0" font-size="13" font-weight="800">ERIKSON'S PSYCHOSOCIAL STAGES</text>
+<rect x="15" y="38" width="275" height="30" rx="6" fill="#2e1a3d" stroke="#e07d9b" stroke-width="1.5"/>
+<text x="152" y="57" text-anchor="middle" fill="#e07d9b" font-size="9" font-weight="700">Trust vs Mistrust (0-1yr)</text>
+<rect x="15" y="72" width="275" height="30" rx="6" fill="#2e1a3d" stroke="#e0a07d" stroke-width="1.5"/>
+<text x="152" y="91" text-anchor="middle" fill="#e0a07d" font-size="9" font-weight="700">Autonomy vs Shame (1-3yr)</text>
+<rect x="15" y="106" width="275" height="30" rx="6" fill="#2e1a3d" stroke="#f5c842" stroke-width="1.5"/>
+<text x="152" y="125" text-anchor="middle" fill="#f5c842" font-size="9" font-weight="700">Initiative vs Guilt (3-6yr)</text>
+<rect x="15" y="140" width="275" height="30" rx="6" fill="#2e1a3d" stroke="#4ade80" stroke-width="1.5"/>
+<text x="152" y="159" text-anchor="middle" fill="#4ade80" font-size="9" font-weight="700">Industry vs Inferiority (6-12yr)</text>
+<rect x="15" y="174" width="275" height="30" rx="6" fill="#2e1a3d" stroke="#6aa3e8" stroke-width="1.5"/>
+<text x="152" y="193" text-anchor="middle" fill="#6aa3e8" font-size="9" font-weight="700">Identity vs Role Confusion (12-20)</text>
+<rect x="15" y="208" width="275" height="30" rx="6" fill="#2e1a3d" stroke="#9b7de0" stroke-width="1.5"/>
+<text x="152" y="227" text-anchor="middle" fill="#9b7de0" font-size="9" font-weight="700">Intimacy vs Isolation (20-40)</text>
+<rect x="15" y="242" width="275" height="30" rx="6" fill="#2e1a3d" stroke="#e07de0" stroke-width="1.5"/>
+<text x="152" y="261" text-anchor="middle" fill="#e07de0" font-size="9" font-weight="700">Generativity vs Stagnation (40-65)</text>
+<rect x="15" y="276" width="275" height="30" rx="6" fill="#2e1a3d" stroke="#e05a5a" stroke-width="1.5"/>
+<text x="152" y="295" text-anchor="middle" fill="#e05a5a" font-size="9" font-weight="700">Integrity vs Despair (65+)</text>
+<!-- Key tasks -->
+<text x="310" y="57" fill="#e07d9b" font-size="8">Caregiver reliability → trust in the world</text>
+<text x="310" y="91" fill="#e0a07d" font-size="8">Self-control, independence → will</text>
+<text x="310" y="125" fill="#f5c842" font-size="8">Exploring, leading → purpose</text>
+<text x="310" y="159" fill="#4ade80" font-size="8">School achievement → competence</text>
+<text x="310" y="193" fill="#6aa3e8" font-size="8">Who am I? → coherent identity</text>
+<text x="310" y="227" fill="#9b7de0" font-size="8">Deep relationships → love</text>
+<text x="310" y="261" fill="#e07de0" font-size="8">Contributing to next generation → care</text>
+<text x="310" y="295" fill="#e05a5a" font-size="8">Life review → wisdom</text>
+</svg>
+<div class="diagram-label">Erikson's eight stages of psychosocial development across the lifespan</div>`,
+
+"Stress & the Body":`<svg viewBox="0 0 600 250" xmlns="http://www.w3.org/2000/svg" style="background:#1e1830;font-family:sans-serif">
+<text x="300" y="20" text-anchor="middle" fill="#9b7de0" font-size="14" font-weight="800">GENERAL ADAPTATION SYNDROME</text>
+<!-- Axes -->
+<line x1="60" y1="200" x2="570" y2="200" stroke="#3d3458" stroke-width="1.5"/>
+<line x1="60" y1="40" x2="60" y2="200" stroke="#3d3458" stroke-width="1.5"/>
+<text x="25" y="120" fill="#b0a8c8" font-size="9" font-weight="600" transform="rotate(-90,25,120)">Resistance to stress</text>
+<text x="315" y="220" text-anchor="middle" fill="#b0a8c8" font-size="9" font-weight="600">Time →</text>
+<!-- Normal resistance line -->
+<line x1="60" y1="120" x2="570" y2="120" stroke="#3d3458" stroke-width="1" stroke-dasharray="5,5"/>
+<text x="575" y="123" fill="#b0a8c8" font-size="7">Normal</text>
+<!-- GAS curve -->
+<path d="M60,120 Q80,120 100,160 Q120,180 140,140 Q160,100 200,70 Q280,55 350,65 Q400,70 430,90 Q470,130 510,170 Q540,200 560,230" fill="none" stroke="#9b7de0" stroke-width="3"/>
+<!-- Stage labels -->
+<rect x="75" y="35" width="80" height="20" rx="4" fill="#2e1a1a" stroke="#e05a5a" stroke-width="1"/>
+<text x="115" y="49" text-anchor="middle" fill="#e05a5a" font-size="9" font-weight="700">1. ALARM</text>
+<rect x="210" y="35" width="110" height="20" rx="4" fill="#1a2e1a" stroke="#4ade80" stroke-width="1"/>
+<text x="265" y="49" text-anchor="middle" fill="#4ade80" font-size="9" font-weight="700">2. RESISTANCE</text>
+<rect x="420" y="35" width="120" height="20" rx="4" fill="#2e2a1a" stroke="#f5c842" stroke-width="1"/>
+<text x="480" y="49" text-anchor="middle" fill="#f5c842" font-size="9" font-weight="700">3. EXHAUSTION</text>
+<!-- Annotations -->
+<text x="115" y="195" text-anchor="middle" fill="#e05a5a" font-size="7">Fight-or-flight</text>
+<text x="115" y="205" text-anchor="middle" fill="#e05a5a" font-size="7">activated</text>
+<text x="265" y="85" text-anchor="middle" fill="#4ade80" font-size="7">Body copes;</text>
+<text x="265" y="95" text-anchor="middle" fill="#4ade80" font-size="7">above-normal resistance</text>
+<text x="505" y="155" text-anchor="middle" fill="#f5c842" font-size="7">Resources depleted;</text>
+<text x="505" y="165" text-anchor="middle" fill="#f5c842" font-size="7">vulnerability to illness</text>
+<!-- Stressor arrow -->
+<path d="M85,30 L85,115" stroke="#e05a5a" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arrowR)"/>
+<text x="85" y="27" text-anchor="middle" fill="#e05a5a" font-size="7" font-weight="600">Stressor</text>
+<defs><marker id="arrowR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e05a5a"/></marker></defs>
+</svg>
+<div class="diagram-label">Selye's General Adaptation Syndrome: alarm, resistance, and exhaustion stages</div>`,
+
+"Measuring Intelligence":`<svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg" style="background:#1e1830;font-family:sans-serif">
+<text x="250" y="20" text-anchor="middle" fill="#9b7de0" font-size="13" font-weight="800">IQ NORMAL DISTRIBUTION</text>
+<!-- Bell curve -->
+<path d="M30,170 Q50,168 80,160 Q120,140 150,100 Q180,55 210,38 Q235,32 250,30 Q265,32 290,38 Q320,55 350,100 Q380,140 420,160 Q450,168 470,170" fill="rgba(155,125,224,0.15)" stroke="#9b7de0" stroke-width="2.5"/>
+<!-- Base line -->
+<line x1="30" y1="170" x2="470" y2="170" stroke="#3d3458" stroke-width="1.5"/>
+<!-- SD markers -->
+<line x1="110" y1="170" x2="110" y2="145" stroke="#3d3458" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="180" y1="170" x2="180" y2="75" stroke="#3d3458" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="250" y1="170" x2="250" y2="30" stroke="#f5c842" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="320" y1="170" x2="320" y2="75" stroke="#3d3458" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="390" y1="170" x2="390" y2="145" stroke="#3d3458" stroke-width="1" stroke-dasharray="3,3"/>
+<!-- IQ labels -->
+<text x="110" y="185" text-anchor="middle" fill="#b0a8c8" font-size="10" font-weight="600">70</text>
+<text x="180" y="185" text-anchor="middle" fill="#b0a8c8" font-size="10" font-weight="600">85</text>
+<text x="250" y="185" text-anchor="middle" fill="#f5c842" font-size="10" font-weight="700">100</text>
+<text x="320" y="185" text-anchor="middle" fill="#b0a8c8" font-size="10" font-weight="600">115</text>
+<text x="390" y="185" text-anchor="middle" fill="#b0a8c8" font-size="10" font-weight="600">130</text>
+<!-- SD labels -->
+<text x="110" y="198" text-anchor="middle" fill="#b0a8c8" font-size="7">-2 SD</text>
+<text x="180" y="198" text-anchor="middle" fill="#b0a8c8" font-size="7">-1 SD</text>
+<text x="250" y="198" text-anchor="middle" fill="#f5c842" font-size="7">Mean</text>
+<text x="320" y="198" text-anchor="middle" fill="#b0a8c8" font-size="7">+1 SD</text>
+<text x="390" y="198" text-anchor="middle" fill="#b0a8c8" font-size="7">+2 SD</text>
+<!-- Percentage labels -->
+<text x="145" y="155" text-anchor="middle" fill="#6aa3e8" font-size="9" font-weight="600">13.6%</text>
+<text x="215" y="120" text-anchor="middle" fill="#6aa3e8" font-size="9" font-weight="600">34.1%</text>
+<text x="285" y="120" text-anchor="middle" fill="#6aa3e8" font-size="9" font-weight="600">34.1%</text>
+<text x="355" y="155" text-anchor="middle" fill="#6aa3e8" font-size="9" font-weight="600">13.6%</text>
+<text x="75" y="165" text-anchor="middle" fill="#b0a8c8" font-size="8">2.1%</text>
+<text x="425" y="165" text-anchor="middle" fill="#b0a8c8" font-size="8">2.1%</text>
+<!-- 68% bracket -->
+<path d="M180,60 L180,55 L320,55 L320,60" fill="none" stroke="#4ade80" stroke-width="1.5"/>
+<text x="250" y="52" text-anchor="middle" fill="#4ade80" font-size="8" font-weight="700">68% of population</text>
+</svg>
+<div class="diagram-label">IQ scores follow a normal distribution (mean=100, SD=15)</div>`,
+
+"Infancy & Childhood":`<svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg" style="background:#1e1830;font-family:sans-serif">
+<text x="300" y="22" text-anchor="middle" fill="#9b7de0" font-size="14" font-weight="800">PIAGET'S COGNITIVE STAGES</text>
+<!-- Stage 1 -->
+<rect x="20" y="45" width="260" height="50" rx="10" fill="#2e1a1a" stroke="#e07d9b" stroke-width="2"/>
+<text x="150" y="65" text-anchor="middle" fill="#e07d9b" font-size="11" font-weight="700">Sensorimotor (0-2 years)</text>
+<text x="150" y="82" text-anchor="middle" fill="#b0a8c8" font-size="8">Object permanence, sensory exploration</text>
+<!-- Stage 2 -->
+<rect x="20" y="105" width="260" height="50" rx="10" fill="#2e2a1a" stroke="#f5c842" stroke-width="2"/>
+<text x="150" y="125" text-anchor="middle" fill="#f5c842" font-size="11" font-weight="700">Preoperational (2-7 years)</text>
+<text x="150" y="142" text-anchor="middle" fill="#b0a8c8" font-size="8">Symbolic thought, egocentrism, no conservation</text>
+<!-- Stage 3 -->
+<rect x="20" y="165" width="260" height="50" rx="10" fill="#1a2e1a" stroke="#4ade80" stroke-width="2"/>
+<text x="150" y="185" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="700">Concrete Operational (7-11)</text>
+<text x="150" y="202" text-anchor="middle" fill="#b0a8c8" font-size="8">Conservation, logical thinking about concrete events</text>
+<!-- Stage 4 -->
+<rect x="20" y="225" width="260" height="50" rx="10" fill="#1e2a3d" stroke="#6aa3e8" stroke-width="2"/>
+<text x="150" y="245" text-anchor="middle" fill="#6aa3e8" font-size="11" font-weight="700">Formal Operational (11+)</text>
+<text x="150" y="262" text-anchor="middle" fill="#b0a8c8" font-size="8">Abstract reasoning, hypothetical thinking</text>
+<!-- Key concepts on right -->
+<text x="320" y="55" fill="#e07d9b" font-size="9" font-weight="600">Key milestone:</text>
+<text x="320" y="70" fill="#b0a8c8" font-size="8">Peek-a-boo → object permanence (~8mo)</text>
+<text x="320" y="85" fill="#b0a8c8" font-size="8">Stranger anxiety develops</text>
+<text x="320" y="115" fill="#f5c842" font-size="9" font-weight="600">Key limitation:</text>
+<text x="320" y="130" fill="#b0a8c8" font-size="8">Can't see others' perspectives</text>
+<text x="320" y="145" fill="#b0a8c8" font-size="8">Fooled by appearances (conservation)</text>
+<text x="320" y="175" fill="#4ade80" font-size="9" font-weight="600">New ability:</text>
+<text x="320" y="190" fill="#b0a8c8" font-size="8">Understands reversibility</text>
+<text x="320" y="205" fill="#b0a8c8" font-size="8">Classification and seriation</text>
+<text x="320" y="235" fill="#6aa3e8" font-size="9" font-weight="600">New ability:</text>
+<text x="320" y="250" fill="#b0a8c8" font-size="8">"What if...?" reasoning</text>
+<text x="320" y="265" fill="#b0a8c8" font-size="8">Scientific and moral reasoning</text>
+</svg>
+<div class="diagram-label">Piaget's four stages of cognitive development with key milestones</div>`,
+
+"Social & Emotional":`<svg viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg" style="background:#1e1830;font-family:sans-serif">
+<text x="250" y="20" text-anchor="middle" fill="#9b7de0" font-size="13" font-weight="800">AINSWORTH'S ATTACHMENT TYPES</text>
+<!-- Secure -->
+<rect x="20" y="40" width="220" height="38" rx="8" fill="#1a2e1a" stroke="#4ade80" stroke-width="2"/>
+<text x="130" y="57" text-anchor="middle" fill="#4ade80" font-size="10" font-weight="700">Secure (~65%)</text>
+<text x="130" y="70" text-anchor="middle" fill="#b0a8c8" font-size="7">Explores freely, distressed at separation, happy at reunion</text>
+<!-- Avoidant -->
+<rect x="20" y="86" width="220" height="38" rx="8" fill="#1e2a3d" stroke="#6aa3e8" stroke-width="2"/>
+<text x="130" y="103" text-anchor="middle" fill="#6aa3e8" font-size="10" font-weight="700">Avoidant (~20%)</text>
+<text x="130" y="116" text-anchor="middle" fill="#b0a8c8" font-size="7">Little distress at separation, ignores caregiver at reunion</text>
+<!-- Anxious -->
+<rect x="20" y="132" width="220" height="38" rx="8" fill="#2e2a1a" stroke="#f5c842" stroke-width="2"/>
+<text x="130" y="149" text-anchor="middle" fill="#f5c842" font-size="10" font-weight="700">Anxious-Ambivalent (~10%)</text>
+<text x="130" y="162" text-anchor="middle" fill="#b0a8c8" font-size="7">Very distressed, clingy but angry at reunion</text>
+<!-- Disorganized -->
+<rect x="20" y="178" width="220" height="38" rx="8" fill="#2e1a1a" stroke="#e05a5a" stroke-width="2"/>
+<text x="130" y="195" text-anchor="middle" fill="#e05a5a" font-size="10" font-weight="700">Disorganised (~5%)</text>
+<text x="130" y="208" text-anchor="middle" fill="#b0a8c8" font-size="7">Confused, contradictory behaviour; linked to abuse</text>
+<!-- Caregiver style -->
+<text x="270" y="50" fill="#4ade80" font-size="8" font-weight="600">Caregiver: Responsive, consistent</text>
+<text x="270" y="62" fill="#b0a8c8" font-size="7">→ Child learns: "I am worthy of love"</text>
+<text x="270" y="96" fill="#6aa3e8" font-size="8" font-weight="600">Caregiver: Distant, rejecting</text>
+<text x="270" y="108" fill="#b0a8c8" font-size="7">→ Child learns: "I must be self-reliant"</text>
+<text x="270" y="142" fill="#f5c842" font-size="8" font-weight="600">Caregiver: Inconsistent</text>
+<text x="270" y="154" fill="#b0a8c8" font-size="7">→ Child learns: "I can't predict others"</text>
+<text x="270" y="188" fill="#e05a5a" font-size="8" font-weight="600">Caregiver: Frightening/frightened</text>
+<text x="270" y="200" fill="#b0a8c8" font-size="7">→ Child: No coherent strategy</text>
+</svg>
+<div class="diagram-label">Ainsworth's attachment types from the Strange Situation experiment</div>`
 
 };
 return diagrams[name]||null;
